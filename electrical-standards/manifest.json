@@ -1,7 +1,7 @@
 {
-  "name": "전기기사 회로이론·전기설비기준 - 통합 요약집",
-  "short_name": "전기 회로·설비기준",
-  "description": "전기기사 필기 회로이론 + 전기설비기준 시험 대비 통합 요약집 및 모의고사",
+  "name": "전기기사 전기설비기준 - 핵심 요약집",
+  "short_name": "전기 설비기준",
+  "description": "전기기사 필기 전기설비기준 시험 대비 핵심 요약집 및 모의고사",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
@@ -9,23 +9,8 @@
   "background_color": "#f8fafc",
   "theme_color": "#2563eb",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icon-512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
