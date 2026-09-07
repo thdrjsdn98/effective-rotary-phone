@@ -1,5 +1,5 @@
 // 간단한 오프라인 캐시용 서비스워커 (네트워크 우선 방식)
-const CACHE_NAME = 'electric-standards-cache-v1';
+const CACHE_NAME = 'electric-standards-cache-v2';
 const FILES_TO_CACHE = [
   './',
   './index.html',
