@@ -280,39 +280,47 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 전기회로</p>
-                    <p style="margin:0;">전류가 전원(+극)에서 나와 부하를 거쳐 전원(-극)으로 돌아오는 <span class='red'>순환 경로</span>를 전기회로라 한다.</p>
+                    <p style="margin:0;">전류가 전원(+극)에서 나와 부하를 거쳐 전원(-극)으로 돌아오는 <span class='red'>순환 경로</span>를 전기회로라 한다. 전류가 흐르려면 ①폐회로(닫힌 경로)가 구성되고 ②전압(기전력)이 인가되어야 한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전하와 전류의 정의</p>
+                    <p style="margin:0;">전하량 Q[C], 전자 1개의 전하량 e = <span class='blue'>-1.602×10⁻¹⁹[C]</span>. 전류는 단위시간 동안 이동한 전하량으로 정의: 직류 <span class='blue'>I = Q/t</span>[A], 교류(순시전류) <span class='blue'>i = dq/dt</span>[A], 반대로 q=∫i dt[C].</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전압(전위차)의 정의</p>
+                    <p style="margin:0;">단위 정전하(+1C)가 두 점 사이를 이동할 때 얻거나 잃는 에너지(일) — 직류: <span class='mint'>V = W/Q</span>[V], W=QV[J] / 교류: v=dw/dq[V]</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 옴의 법칙</p>
-                    <p style="margin:0;"><span class='red'>V = IR</span>, I = V/R, R = V/I — 전압은 전류·저항에 비례, 전류는 전압에 비례·저항에 반비례</p>
+                    <p style="margin:0;"><span class='red'>V = IR</span>, I = V/R, R = V/I — 전압은 전류·저항에 비례, 전류는 전압에 비례·저항에 반비례한다. (예) R=10Ω에 V=100V를 걸면 I=100/10=10A.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 키르히호프의 법칙</p>
-                    <p style="margin:0;"><span class='blue'>KCL(전류법칙)</span>: 한 절점에서 유입 전류의 합 = 유출 전류의 합 / <span class='blue'>KVL(전압법칙)</span>: 폐회로에서 기전력의 합 = 전압강하의 합</p>
+                    <p style="margin:0;"><span class='blue'>KCL(전류법칙)</span>: 한 절점에서 유입 전류의 합 = 유출 전류의 합 (대수합은 0) / <span class='blue'>KVL(전압법칙)</span>: 폐회로에서 기전력의 합 = 전압강하의 합. 회로망 해석의 가장 기본이 되는 두 법칙이다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. 저항의 접속</p>
-                    <p style="margin:0;">직렬: <span class='mint'>R = R1+R2+...</span> / 병렬: <span class='mint'>1/R = 1/R1+1/R2+...</span> → R=R1R2/(R1+R2)(2개일 때)</p>
+                    <p style="margin:0;">직렬: <span class='mint'>R = R1+R2+...+Rn</span> (전류 일정, 전압은 저항에 비례 분배) / 병렬: <span class='mint'>1/R = 1/R1+1/R2+...+1/Rn</span> (전압 일정, 전류는 저항에 반비례 분배). 저항 2개 병렬이면 R=R1R2/(R1+R2). 동일 저항 R을 n개 직렬하면 nR, 병렬하면 R/n.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">5. 분압법칙 및 분류법칙</p>
-                    <p style="margin:0;">직렬회로 분압: <span class='orange'>V1 = R1/(R1+R2)×V</span> / 병렬회로 분류: <span class='orange'>I1 = R2/(R1+R2)×I</span> (자기 저항이 아닌 상대편 저항의 비율)</p>
+                    <p style="margin:0;">직렬회로 분압: <span class='orange'>V1 = R1/(R1+R2)×V</span> (자기 저항이 클수록 걸리는 전압도 큼) / 병렬회로 분류: <span class='orange'>I1 = R2/(R1+R2)×I</span> (분류법칙은 반대로 '상대편' 저항의 비율을 곱한다는 점에 주의).</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">6. 전지의 직·병렬 연결</p>
-                    <p style="margin:0;">기전력 E, 내부저항 r인 전지 n개 — 직렬: 전압 <span class='red'>nE</span>, 내부저항 <span class='red'>nr</span> / 병렬: 전압 <span class='blue'>E</span>(불변), 내부저항 <span class='blue'>r/n</span></p>
+                    <p style="margin:0;">기전력 E, 내부저항 r인 전지 n개 — 직렬연결: 전압 <span class='red'>nE</span>, 내부저항 <span class='red'>nr</span>, 부하전류 I=nE/(R+nr) → 큰 전압이 필요할 때 사용 / 병렬연결: 전압 <span class='blue'>E</span>(불변), 내부저항 <span class='blue'>r/n</span>, 전류 I=E/(R+r/n) → 큰 전류(오래 쓰는 용량)가 필요할 때 사용.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">7. 전력, 전력량</p>
-                    <p style="margin:0;">전력 <span class='mint'>P = VI = I²R = V²/R</span> [W] / 전력량 <span class='mint'>W = Pt</span> [J] / 1kWh = 860kcal</p>
+                    <p style="margin:0;">전력 <span class='mint'>P = VI = I²R = V²/R</span>[W] / 전력량(일) <span class='mint'>W = Pt</span>[J=W·sec] / 줄의 법칙: 1kWh=3.6×10⁶J, 1J≒0.24cal, <span class='mint'>1kWh=860kcal</span> — 저항에서 발생하는 열량 H=0.24Pt[cal]</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">8. 휘스톤 브리지</p>
-                    <p style="margin:0;">평형 조건: <span class='orange'>R1R3 = R2R4</span> — 평형 시 검류계(G)에 전류가 흐르지 않는다</p>
+                    <p style="margin:0;">평형 조건: <span class='orange'>R1R3 = R2R4</span> — 마주보는 저항의 곱이 같으면 브리지 중간의 검류계(G)에 전류가 흐르지 않는다(두 접점의 전위가 같아지므로). 미지저항 측정에 널리 사용된다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">9. 배율기와 분류기</p>
-                    <p style="margin:0;"><span class='red'>배율기</span>: 전압계 범위 확대, 내부저항에 <span class='red'>직렬</span>로 큰 저항 → Rm=(m-1)Rv / <span class='blue'>분류기</span>: 전류계 범위 확대, 내부저항에 <span class='blue'>병렬</span>로 작은 저항 → Rs=Ra/(n-1)</p>
+                    <p style="margin:0;"><span class='red'>배율기</span>: 전압계 측정범위 확대용. 내부저항 Rv인 전압계에 <span class='red'>직렬</span>로 큰 저항을 연결 → Rm=(m-1)Rv (m: 배율) / <span class='blue'>분류기</span>: 전류계 측정범위 확대용. 내부저항 Ra인 전류계에 <span class='blue'>병렬</span>로 작은 저항을 연결 → Rs=Ra/(n-1) (n: 배율)</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -417,23 +425,31 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 교류</p>
-                    <p style="margin:0;">시간에 따라 크기와 방향이 주기적으로 변하는 전류·전압. 대표적으로 <span class='red'>정현파(사인파)</span> 교류를 다룬다.</p>
+                    <p style="margin:0;">시간에 따라 크기와 방향이 주기적으로 변하는 전류·전압. 발전기의 회전 원리상 자연스럽게 <span class='red'>정현파(사인파)</span> 형태로 나타나며, 교류 해석의 기본 파형이 된다.</p>
                 </div>
                 <div class="highlight-box">
-                    <p style="font-weight:700; margin:0 0 6px 0;">2. 용어</p>
-                    <p style="margin:0;">주기 <span class='blue'>T=1/f</span> [s], 주파수 <span class='blue'>f</span> [Hz], 각속도 <span class='blue'>ω=2πf</span> [rad/s]</p>
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 용어(주기/주파수/각속도)</p>
+                    <p style="margin:0;">주기 <span class='blue'>T=1/f</span>[s] (파형이 한 번 반복되는 데 걸리는 시간) / 주파수 <span class='blue'>f</span>[Hz] (1초에 반복되는 횟수, 우리나라 상용주파수 60Hz) / 각속도(각주파수) <span class='blue'>ω=2πf=2π/T</span>[rad/s]</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">위상과 위상차</p>
+                    <p style="margin:0;">기준 파형보다 앞서면 <span class='mint'>진상(위상이 앞선다)</span>, 뒤지면 <span class='mint'>지상(위상이 뒤진다)</span>이라 한다. 두 파형의 위상차 θ가 0이면 동상.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 정현파 교류의 표시</p>
-                    <p style="margin:0;">순시값 <span class='mint'>v(t) = Vm sin(ωt+θ)</span> — Vm: 최댓값, θ: 위상각</p>
+                    <p style="margin:0;">순시값 <span class='mint'>v(t) = Vm sin(ωt+θ)</span> — Vm: 최댓값(진폭), ωt+θ: 위상각. t=0일 때 순시값은 Vm sinθ 이다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. 파형별 실효값·평균값·파고율·파형률</p>
-                    <p style="margin:0;">정현파: 실효값=<span class='orange'>Vm/√2</span>, 평균값=<span class='orange'>2Vm/π</span>, 파고율(최댓값/실효값)=√2, 파형률(실효값/평균값)≈1.11</p>
+                    <p style="margin:0;">정현파: 실효값=<span class='orange'>Vm/√2</span>(≈0.707Vm), 평균값=<span class='orange'>2Vm/π</span>(≈0.637Vm) / <span class='orange'>파고율</span>(최댓값/실효값)=√2≈1.414 / <span class='orange'>파형률</span>(실효값/평균값)=π/(2√2)≈1.11. 실효값은 '같은 일을 하는 직류값'이라는 의미로, 전력 계산 등 실무 계산의 기준이 된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">다른 파형의 값(참고)</p>
+                    <p style="margin:0;">구형파: 실효값=평균값=최댓값(파고율=파형률=1) / 삼각파(톱니파): 실효값=Vm/√3, 평균값=Vm/2</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">5. 정현파 교류의 다양한 표현법</p>
-                    <p style="margin:0;">삼각함수 표시, <span class='red'>페이저(극형식) V∠θ</span>, <span class='red'>복소수(직각좌표) a+jb</span> 표시가 서로 호환된다</p>
+                    <p style="margin:0;">①삼각함수 표시 v(t)=Vm sin(ωt+θ) / ②<span class='red'>페이저(극형식)</span> 표시 V∠θ (크기와 위상각만으로 표현, 실효값 기준이 관례) / ③<span class='red'>복소수(직각좌표)</span> 표시 a+jb (a=실수부, b=허수부, V=√(a²+b²), θ=tan⁻¹(b/a)) — 세 표현은 서로 자유롭게 변환 가능하며 회로 계산에서는 페이저·복소수 표현을 주로 사용한다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -524,23 +540,31 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 수동소자</p>
-                    <p style="margin:0;">에너지를 소비·저장만 하는 소자 — 저항 R, 인덕터 L, 커패시터 C</p>
+                    <p style="margin:0;">에너지를 소비하거나 저장만 하고 스스로 발생시키지 않는 소자 — 저항 R(소비), 인덕터 L(자기에너지 저장), 커패시터 C(전기에너지 저장)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 수동소자의 응답</p>
-                    <p style="margin:0;">R: 전압·전류 <span class='red'>동상</span>, Z=R / L: 전류가 전압보다 <span class='blue'>90° 뒤짐</span>, Z=jωL / C: 전류가 전압보다 <span class='mint'>90° 앞섬</span>, Z=1/jωC</p>
+                    <p style="margin:0;">저항 R: 전압·전류 <span class='red'>동상</span>, Z=R / 인덕터 L: 전류가 전압보다 <span class='blue'>90° 뒤짐(지상)</span>, Z=jωL, 유도리액턴스 XL=ωL / 커패시터 C: 전류가 전압보다 <span class='mint'>90° 앞섬(진상)</span>, Z=1/jωC=-j/(ωC), 용량리액턴스 XC=1/(ωC)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">주파수와 리액턴스의 관계</p>
+                    <p style="margin:0;">XL=ωL은 주파수에 <span class='orange'>비례</span>(주파수가 높을수록 인덕터는 전류를 더 방해) / XC=1/(ωC)는 주파수에 <span class='orange'>반비례</span>(주파수가 높을수록 커패시터는 전류를 더 잘 통과)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. R-L-C 직렬회로</p>
-                    <p style="margin:0;">임피던스 <span class='orange'>Z = R + j(XL−XC)</span>, |Z|=√(R²+(XL−XC)²)</p>
+                    <p style="margin:0;">임피던스 <span class='orange'>Z = R + j(XL−XC)</span>, 크기 |Z|=√(R²+(XL−XC)²), 위상각 θ=tan⁻¹((XL-XC)/R). 전류는 공통이고 각 소자에 걸리는 전압이 위상차를 가진다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. R-L-C 병렬회로</p>
-                    <p style="margin:0;">어드미턴스 <span class='red'>Y = 1/R + j(1/XC − 1/XL)</span> = G + j(BC−BL)</p>
+                    <p style="margin:0;">어드미턴스 <span class='red'>Y = 1/R + j(1/XC − 1/XL) = G + j(BC−BL)</span> [℧,S] — G: 컨덕턴스(1/R), BC/BL: 서셉턴스. 전압이 공통이고 각 소자에 흐르는 전류가 위상차를 가진다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">5. 공진회로</p>
-                    <p style="margin:0;">직렬공진(XL=XC): 임피던스 <span class='blue'>최소(=R)</span>, 전류 최대 / 병렬공진: 임피던스 최대, 전류 최소 / f0=<span class='blue'>1/(2π√LC)</span></p>
+                    <p style="margin:0;">직렬공진(XL=XC): 리액턴스가 상쇄되어 임피던스 <span class='blue'>최소(=R)</span>, 전류 최대, 역률=1 / 병렬공진: 반대로 임피던스 <span class='blue'>최대</span>, 전류 최소 / 공진주파수 <span class='blue'>f0=1/(2π√LC)</span> — L, C 값으로 결정되며 R과는 무관</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">선택도(첨예도) Q</p>
+                    <p style="margin:0;">직렬공진회로의 선택도 <span class='mint'>Q = (1/R)√(L/C) = ω0L/R</span>. Q가 클수록 공진곡선이 뾰족해져 대역폭이 좁아지고, 특정 주파수 선택 성능(라디오 동조회로 등)이 좋아진다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -631,15 +655,19 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 각 회로소자에서의 교류전력</p>
-                    <p style="margin:0;">저항 R: 유효전력만 소비(P=I²R) / 인덕터 L, 커패시터 C: <span class='red'>무효전력</span>만 존재, 평균 유효전력은 0</p>
+                    <p style="margin:0;">저항 R: 전압·전류가 동상이므로 <span class='red'>유효전력만 소비</span>(P=VIcosθ=I²R) / 인덕터 L, 커패시터 C: 전압·전류가 90° 차이나므로 <span class='red'>무효전력만 존재</span>, 평균 유효전력은 0 (에너지를 저장했다가 그대로 돌려줌)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전력의 3요소</p>
+                    <p style="margin:0;">유효전력 <span class='blue'>P=VIcosθ</span>[W] (실제로 소비되는 전력) / 무효전력 <span class='blue'>Q=VIsinθ</span>[Var] (소자를 오가기만 하는 전력) / 피상전력 <span class='blue'>S=VI=√(P²+Q²)</span>[VA] (전원이 실제로 공급해야 하는 총 용량) / 역률 <span class='blue'>cosθ=P/S</span></p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 최대전력의 전송</p>
-                    <p style="margin:0;">내부저항 R0인 전원에서 부하저항 <span class='blue'>RL=R0</span>일 때 최대전력이 전달되며, 이때 <span class='blue'>Pmax = E²/4R0</span></p>
+                    <p style="margin:0;">내부저항 R0인 전원에서 부하저항 <span class='mint'>RL=R0</span>일 때(정합) 최대전력이 전달되며, 이때 <span class='mint'>Pmax = E²/4R0</span>. 교류에서 부하가 임피던스(ZL)라면 ZL=Z0*(내부임피던스의 켤레복소수)일 때 최대전력 전달.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 복소전력과 전력의 측정</p>
-                    <p style="margin:0;">복소전력 <span class='mint'>S = P + jQ = VI*</span> (I*는 전류의 켤레복소수) — 크기 |S|는 피상전력</p>
+                    <p style="margin:0;">복소전력 <span class='orange'>S = P + jQ = VI*</span> (I*는 전류의 켤레복소수) — 크기 |S|는 피상전력이며, 실수부가 유효전력 P, 허수부가 무효전력 Q이다. 단상 전력계로 전압·전류·전력을 측정해 역률을 역산할 수도 있다(cosθ=P/VI).</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -720,19 +748,19 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 자기 인덕턴스와 상호 인덕턴스</p>
-                    <p style="margin:0;">자기인덕턴스 <span class='red'>L=Nφ/I</span> [H] / 상호인덕턴스 M, 결합계수 <span class='red'>k=M/√(L1L2)</span> (0≤k≤1)</p>
+                    <p style="margin:0;">자기인덕턴스 <span class='red'>L=Nφ/I</span>[H] (코일이 자기 자신에 만드는 자속과 전류의 비) / 상호인덕턴스 M: 한 코일의 전류 변화가 다른 코일에 유도기전력을 만드는 정도 / 결합계수 <span class='red'>k=M/√(L1L2)</span> (0≤k≤1, k=1이면 완전결합)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 인덕턴스의 접속(합성 인덕턴스)</p>
-                    <p style="margin:0;">가동(가극성) 결합: <span class='blue'>L=L1+L2+2M</span> / 차동(감극성) 결합: <span class='blue'>L=L1+L2-2M</span></p>
+                    <p style="margin:0;">가동(가극성) 결합: 자속이 서로 보강 → <span class='blue'>L=L1+L2+2M</span> / 차동(감극성) 결합: 자속이 서로 상쇄 → <span class='blue'>L=L1+L2-2M</span> — 두 코일을 감은 방향에 따라 결정된다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 이상 변압기</p>
-                    <p style="margin:0;">권수비 <span class='mint'>a = N1/N2 = V1/V2 = I2/I1</span></p>
+                    <p style="margin:0;">권수비 <span class='mint'>a = N1/N2 = V1/V2 = I2/I1</span> — 1차 권선수가 많을수록(a>1) 전압을 낮추고 전류를 높이는 강압, 반대는 승압. 이상 변압기는 손실이 없다고 가정한다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. 벡터 궤적</p>
-                    <p style="margin:0;">주파수나 소자값을 변화시킬 때 임피던스(또는 어드미턴스) 벡터의 끝점이 그리는 자취. R-L 직렬회로에서 리액턴스를 변화시키면 <span class='orange'>반원</span> 궤적을 그린다</p>
+                    <p style="margin:0;">회로의 주파수나 소자값을 0→∞로 변화시킬 때 임피던스(또는 어드미턴스) 벡터의 끝점이 그리는 자취. <span class='orange'>R-L 직렬회로</span>에서 리액턴스(ωL)를 0→∞로 변화시키면 임피던스 벡터는 <span class='orange'>반원</span> 궤적을 그린다. 이러한 궤적 해석은 필터·공진회로 설계에서 특성을 파악하는 데 사용된다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -811,11 +839,23 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 전원</p>
-                    <p style="margin:0;"><span class='red'>전압원</span>: 부하에 관계없이 일정한 전압 유지(이상적: 내부저항 0) / <span class='blue'>전류원</span>: 일정한 전류 유지(이상적: 내부저항 ∞)</p>
+                    <p style="margin:0;"><span class='red'>전압원</span>: 부하에 관계없이 일정한 전압 유지(이상적: 내부저항 0) / <span class='blue'>전류원</span>: 부하에 관계없이 일정한 전류 유지(이상적: 내부저항 ∞). 실제 전원은 내부저항(임피던스)을 가지므로 부하에 따라 단자전압이 변한다.</p>
                 </div>
                 <div class="highlight-box">
-                    <p style="font-weight:700; margin:0 0 6px 0;">2. 선형 회로망 정리</p>
-                    <p style="margin:0;"><span class='mint'>중첩의 정리</span>: 전압원 단락·전류원 개방 후 각각 해석해 합산 / <span class='mint'>테브난의 정리</span>: Vth와 Rth의 직렬 등가 / <span class='mint'>노턴의 정리</span>: IN과 RN의 병렬 등가 / <span class='mint'>밀만의 정리</span>: 여러 병렬 전압원의 등가전압 공식</p>
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 선형 회로망 정리 - 중첩의 정리</p>
+                    <p style="margin:0;">여러 독립 전원이 있는 선형회로에서, <span class='mint'>전압원은 단락·전류원은 개방</span>한 뒤 한 전원씩 따로 해석하고 그 결과를 모두 더한다. 선형회로에서만 성립한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">테브난의 정리</p>
+                    <p style="margin:0;">복잡한 두 단자망을 <span class='mint'>등가전압원 Vth와 등가저항 Rth의 직렬</span>로 바꿀 수 있다는 정리. Vth는 두 단자를 개방했을 때의 전압, Rth는 전압원 단락·전류원 개방 후 두 단자에서 본 저항이다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">노턴의 정리</p>
+                    <p style="margin:0;">테브난의 정리를 전류원 기준으로 바꾼 것 — <span class='mint'>등가전류원 IN과 등가저항 RN의 병렬</span>. IN=Vth/Rth, RN=Rth (테브난과 노턴은 서로 변환 가능한 쌍둥이 정리).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">밀만의 정리</p>
+                    <p style="margin:0;">여러 개의 전압원(각각 내부저항 포함)이 병렬로 연결되어 있을 때, 한 번에 등가전압을 구하는 공식 — <span class='orange'>Vab = (ΣE/R) / (Σ1/R)</span> 형태로, 각 지로의 (기전력/저항)의 합을 (1/저항)의 합으로 나눈다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -896,15 +936,15 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 평형 3상 교류</p>
-                    <p style="margin:0;">Y결선: 선간전압=<span class='red'>√3×상전압</span>, 선전류=상전류 / Δ결선: 선간전압=상전압, 선전류=<span class='red'>√3×상전류</span> / 3상 전력 <span class='red'>P=√3 VL IL cosθ</span></p>
+                    <p style="margin:0;">크기가 같고 위상이 <span class='red'>120°씩</span> 차이나는 세 개의 정현파 전압/전류. Y결선: 선간전압=<span class='red'>√3×상전압</span>(위상 30° 앞섬), 선전류=상전류 / Δ결선: 선간전압=상전압, 선전류=<span class='red'>√3×상전류</span>(위상 30° 뒤짐) / 3상 전력 <span class='red'>P=√3 VL IL cosθ</span> (결선 방식에 관계없이 동일한 형태)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 부하의 Y↔Δ 변환</p>
-                    <p style="margin:0;"><span class='blue'>ZΔ = 3ZY</span> (Δ결선 임피던스는 Y결선의 3배)</p>
+                    <p style="margin:0;">임피던스가 같은 평형부하를 상호 변환할 때 <span class='blue'>ZΔ = 3ZY</span> (Δ결선 임피던스는 Y결선의 3배). 회로 해석을 단순화하기 위해 서로 변환해서 계산하는 경우가 많다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 3상 전력의 측정(2전력계법)</p>
-                    <p style="margin:0;">단상 전력계 2대로 3상 전력을 측정: <span class='mint'>P = W1+W2</span>, 역률 <span class='mint'>cosθ = P/(√3×√(W1²+W2²-W1W2))</span></p>
+                    <p style="margin:0;">단상 전력계 2대만으로 3상 전력을 측정하는 방법 — 3상 전체 유효전력 <span class='mint'>P = W1+W2</span> / 무효전력 <span class='mint'>Q=√3(W1-W2)</span> / 역률 <span class='mint'>cosθ = P/(√3×√(W1²+W2²-W1W2))</span> — 두 전력계 지시값 W1, W2로 3상량을 모두 구할 수 있다는 것이 핵심.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -973,15 +1013,19 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 벡터 연산자 a와 위상 θ의 관계</p>
-                    <p style="margin:0;"><span class='red'>a = 1∠120°</span>, a²=1∠240°, a³=1∠360°=1, 1+a+a²=0</p>
+                    <p style="margin:0;"><span class='red'>a = 1∠120°</span> (크기 1, 위상 120°인 벡터연산자). a²=1∠240°, a³=1∠360°=1, <span class='red'>1+a+a²=0</span> — 대칭좌표법 계산의 기본 도구.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 대칭좌표법</p>
-                    <p style="margin:0;">불평형 3상을 <span class='blue'>영상분(V0)·정상분(V1)·역상분(V2)</span>으로 분해. V0=(1/3)(Va+Vb+Vc)</p>
+                    <p style="margin:0;">불평형 3상을 <span class='blue'>영상분(V0)·정상분(V1)·역상분(V2)</span> 세 가지 대칭 성분의 합으로 분해해서 해석하는 방법. V0=(1/3)(Va+Vb+Vc), V1=(1/3)(Va+aVb+a²Vc), V2=(1/3)(Va+a²Vb+aVc).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">각 성분의 의미</p>
+                    <p style="margin:0;"><span class='mint'>정상분</span>: 원래 회전방향과 같은 평형 3상분(전동기를 정상적으로 돌리는 성분) / <span class='mint'>역상분</span>: 반대 방향 회전을 유발(전동기 발열·역회전 원인) / <span class='mint'>영상분</span>: 세 상이 모두 같은 크기·위상(중성선/대지로 흐르는 성분, 지락사고와 관련)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 발전기를 포함하는 3상 회로의 고장계산</p>
-                    <p style="margin:0;">1선 지락, 선간 단락 등 사고 시 대칭좌표법으로 고장전류를 계산 — <span class='mint'>영상분·정상분·역상분 임피던스</span>를 이용</p>
+                    <p style="margin:0;">1선 지락, 선간 단락, 2선 지락 등의 사고가 발생하면 대칭좌표법으로 고장전류를 계산한다 — 발전기의 <span class='orange'>영상임피던스(Z0)·정상임피던스(Z1)·역상임피던스(Z2)</span>를 사고 종류에 맞게 조합(직렬/병렬)하여 고장점의 각 대칭분을 구한 뒤 실제 전류로 환산한다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -1062,19 +1106,19 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 비정현파 교류</p>
-                    <p style="margin:0;">사인파가 아닌 주기적 파형(구형파, 삼각파 등)을 비정현파라 한다</p>
+                    <p style="margin:0;">사인파가 아닌 주기적 파형(구형파, 삼각파, 톱니파, 정류된 파형 등)을 비정현파라 한다. 실제 전자·전력회로의 신호는 완전한 정현파가 아닌 경우가 많아 이를 다루는 이론이 필요하다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 푸리에 급수</p>
-                    <p style="margin:0;">비정현파 = <span class='red'>직류분 + 기본파 + 각 고조파</span>의 합으로 표현. 반파대칭이면 <span class='red'>기수(홀수)</span> 고조파만 존재</p>
+                    <p style="margin:0;">임의의 주기함수(비정현파)는 <span class='red'>직류분 + 기본파 + 각 고조파(2배,3배,4배...주파수)</span>의 합으로 표현할 수 있다 — f(t)=a0/2+Σ(an cos nωt + bn sin nωt). <span class='red'>반파대칭</span>이면 기수(홀수) 고조파만, <span class='red'>정현대칭</span>이면 sin항만, <span class='red'>여현대칭</span>이면 cos항만 남는 등 파형의 대칭성에 따라 급수가 단순해진다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 비정현파의 계산</p>
-                    <p style="margin:0;">실효값 <span class='blue'>V = √(V0²+V1²+V2²+...)</span> (직류분과 각 고조파 실효값의 제곱합의 제곱근)</p>
+                    <p style="margin:0;">비정현파의 실효값 <span class='blue'>V = √(V0²+V1²+V2²+...)</span> (직류분과 각 고조파 실효값의 제곱합의 제곱근) — 각 고조파는 서로 독립이므로 제곱합으로 합성한다. 왜형률(THD) = 전고조파 실효값/기본파 실효값.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. 비정현파의 직렬 임피던스 및 결선</p>
-                    <p style="margin:0;">각 고조파(각속도 nω)마다 리액턴스가 다르므로(XLn=nωL, XCn=XC/n) 고조파별로 개별 계산 후 <span class='mint'>중첩</span>하여 합산</p>
+                    <p style="margin:0;">인덕터·커패시터의 리액턴스는 주파수에 따라 달라지므로, n차 고조파에 대해서는 <span class='mint'>XLn=nωL</span>(n배로 커짐), <span class='mint'>XCn=XC/n</span>(1/n로 작아짐)이 된다. 따라서 각 고조파별로 개별 회로를 풀어 전류·전압을 구한 뒤, 서로 다른 주파수 성분이므로 <span class='mint'>중첩(제곱합의 제곱근으로 합성)</span>하여 최종 결과를 얻는다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -1155,27 +1199,27 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 2단자망 회로의 구성</p>
-                    <p style="margin:0;">입력과 출력이 한 쌍의 단자로 이루어진 회로 — <span class='red'>구동점 임피던스</span> Z(s)로 표현</p>
+                    <p style="margin:0;">입력과 출력이 한 쌍의 단자로 이루어진 회로 — 단자에서 바라본 임피던스를 <span class='red'>구동점 임피던스</span> Z(s)라 하며, 회로 내부 구성과 무관하게 단자에서의 전압-전류 관계만으로 특성을 표현할 수 있다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 정저항 회로와 역회로</p>
-                    <p style="margin:0;">주파수에 관계없이 구동점 임피던스가 항상 순저항인 회로 — 정저항 조건: <span class='blue'>R² = Z1×Z2</span></p>
+                    <p style="margin:0;">주파수에 관계없이 구동점 임피던스가 항상 순저항(실수)으로만 나타나는 특수한 회로 — 정저항 조건: <span class='blue'>R² = Z1×Z2</span> (두 임피던스의 곱이 저항의 제곱과 같아야 함). 역회로는 어떤 임피던스와 곱했을 때 항상 상수(R²)가 되는 한 쌍의 회로를 의미한다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 4단자망의 기본식</p>
-                    <p style="margin:0;"><span class='mint'>[V1,I1] = [A B; C D][V2,I2]</span> 형태의 ABCD(전송) 파라미터. 가역회로: <span class='mint'>AD-BC=1</span></p>
+                    <p style="margin:0;">입력측(V1,I1)과 출력측(V2,I2) 사이의 관계를 <span class='mint'>[V1;I1] = [A B; C D][V2;I2]</span> 형태로 나타낸 것이 ABCD(전송) 파라미터. 가역(수동)회로 조건: <span class='mint'>AD-BC=1</span>, 좌우 대�칭 회로면 A=D.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. Z파라미터와 Y파라미터</p>
-                    <p style="margin:0;">Z파라미터: 출력단자 <span class='orange'>개방</span> 상태에서 정의 / Y파라미터: 출력단자 <span class='orange'>단락</span> 상태에서 정의</p>
+                    <p style="margin:0;"><span class='orange'>Z파라미터</span>: 출력단자를 <span class='orange'>개방</span>한 상태에서 정의하는 임피던스 파라미터(V1=Z11I1+Z12I2 등) / <span class='orange'>Y파라미터</span>: 출력단자를 <span class='orange'>단락</span>한 상태에서 정의하는 어드미턴스 파라미터. 트랜지스터 등가회로에는 흔히 H(하이브리드) 파라미터도 사용된다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">5. 영상 파라미터</p>
-                    <p style="margin:0;">회로 양쪽에서 바라본 임피던스가 서로 정합되는 <span class='red'>영상임피던스</span> 개념(영상전달정수 등)</p>
+                    <p style="margin:0;">회로의 양쪽 단자에서 바라본 임피던스가 서로 정합(matching)되도록 정의하는 <span class='red'>영상임피던스(Zo1, Zo2)</span>와 신호 전달 특성을 나타내는 영상전달정수 개념 — 통신선로·필터 설계에서 반사 없는 신호 전달을 위해 사용된다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">6. 분포정수 회로</p>
-                    <p style="margin:0;">긴 전송선로에서 저항·인덕턴스·정전용량이 선로를 따라 분포 — 특성임피던스 <span class='blue'>Z0=√(Z/Y)</span>, 무손실선로: <span class='blue'>Z0=√(L/C)</span></p>
+                    <p style="margin:0;">송전선처럼 긴 선로에서는 저항·인덕턴스·정전용량·누설컨덕턴스가 선로를 따라 <span class='blue'>고르게 분포</span>되어 있다고 본다. 특성임피던스 <span class='blue'>Z0=√(Z/Y)</span>, 무손실선로(R=0,G=0)인 경우 <span class='blue'>Z0=√(L/C)</span> — 선로의 길이나 부하와 무관한 고유값이다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -1254,15 +1298,15 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 기본함수의 라플라스 변환</p>
-                    <p style="margin:0;">단위계단 u(t)→<span class='red'>1/s</span>, e^(-at)→<span class='red'>1/(s+a)</span>, sin(ωt)→ω/(s²+ω²)</p>
+                    <p style="margin:0;">단위계단 u(t)→<span class='red'>1/s</span>, 단위임펄스 δ(t)→1, e^(-at)→<span class='red'>1/(s+a)</span>, sin(ωt)→ω/(s²+ω²), cos(ωt)→s/(s²+ω²), t→1/s²</p>
                 </div>
                 <div class="highlight-box">
-                    <p style="font-weight:700; margin:0 0 6px 0;">2. 라플라스 변환의 재정리</p>
-                    <p style="margin:0;">선형성: L[af(t)+bg(t)]=aF(s)+bG(s) / 미분정리: L[f'(t)]=<span class='blue'>sF(s)-f(0)</span> / 적분정리: L[∫f(t)dt]=F(s)/s</p>
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 라플라스 변환의 재정리(주요 성질)</p>
+                    <p style="margin:0;">선형성: L[af(t)+bg(t)]=aF(s)+bG(s) / 미분정리: L[f'(t)]=<span class='blue'>sF(s)-f(0)</span> / 적분정리: L[∫f(t)dt]=F(s)/s / 시간추이정리: L[f(t-a)u(t-a)]=e^(-as)F(s) / 최종값정리: lim(t→∞)f(t)=lim(s→0)sF(s) / 초기값정리: lim(t→0)f(t)=lim(s→∞)sF(s)</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 역라플라스 변환</p>
-                    <p style="margin:0;">F(s)를 <span class='mint'>부분분수로 분해</span>한 뒤 각 항을 표준 변환쌍과 대응시켜 시간함수로 되돌린다</p>
+                    <p style="margin:0;">F(s)가 분수 형태(유리함수)일 때 <span class='mint'>부분분수로 분해</span>한 뒤 각 항을 표준 변환쌍(1/s, 1/(s+a) 등)과 대응시켜 시간함수로 되돌린다. 회로 미분방정식을 s영역에서 대수적으로 푼 뒤, 마지막에 이 과정을 거쳐 실제 시간에 따른 응답을 얻는다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -1343,19 +1387,23 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 과도현상</p>
-                    <p style="margin:0;">회로의 상태(스위치 On/Off 등)가 바뀐 직후, 새로운 정상상태에 도달하기까지의 <span class='red'>일시적인 변화 과정</span></p>
+                    <p style="margin:0;">회로의 상태(스위치 On/Off 등)가 바뀐 직후부터, 새로운 정상상태(안정상태)에 도달하기까지의 <span class='red'>일시적인 변화 과정</span>. 인덕터와 커패시터가 에너지를 즉시 바꿀 수 없기 때문에 발생한다(인덕터 전류·커패시터 전압은 순간적으로 변하지 않는다).</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 직류 R-L 직렬회로</p>
-                    <p style="margin:0;">전류 <span class='blue'>i(t) = (E/R)(1-e^(-Rt/L))</span>, 시정수 <span class='blue'>τ = L/R</span></p>
+                    <p style="margin:0;">스위치 On 시 전류 <span class='blue'>i(t) = (E/R)(1-e^(-Rt/L))</span> — 처음엔 0에서 시작해 지수적으로 증가하여 최종값 E/R에 도달. 시정수 <span class='blue'>τ = L/R</span>[s]로, τ가 클수록 정상상태에 도달하는 데 오래 걸린다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">3. 직류 R-C 직렬회로</p>
-                    <p style="margin:0;">전압 <span class='mint'>vc(t) = E(1-e^(-t/RC))</span>, 시정수 <span class='mint'>τ = RC</span></p>
+                    <p style="margin:0;">스위치 On 시(충전) 전압 <span class='mint'>vc(t) = E(1-e^(-t/RC))</span>, 전류 i(t)=(E/R)e^(-t/RC) — 커패시터 전압은 0에서 시작해 E로 수렴, 전류는 초기 최대값에서 지수적으로 감소. 시정수 <span class='mint'>τ = RC</span>[s].</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">시정수의 의미</p>
+                    <p style="margin:0;">시정수 τ가 지나면 응답은 최종값(또는 초기값)의 약 <span class='orange'>63.2%</span>만큼 변화하고, 5τ 정도가 지나면 사실상 정상상태에 도달했다고 본다(99% 이상).</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">4. 직류 R-L-C 직렬회로</p>
-                    <p style="margin:0;">감쇠 정도에 따라 <span class='orange'>과제동·임계제동·부족제동(진동)</span>으로 구분되며, 이는 저항 R의 크기에 따라 달라진다</p>
+                    <p style="margin:0;">저항 R의 크기에 따라 감쇠 양상이 달라진다 — <span class='red'>과제동</span>(R이 커서 진동 없이 서서히 정상상태 도달), <span class='red'>임계제동</span>(진동 직전의 경계, 가장 빠르게 진동 없이 도달), <span class='red'>부족제동</span>(R이 작아 진동하며 감쇠). 이는 2차 미분방정식의 특성근이 실근(과제동), 중근(임계제동), 복소근(부족제동)인지에 대응한다.</p>
                 </div>
 
                     <div class="quiz-sec-header">
@@ -1434,11 +1482,11 @@
 
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">1. 전달함수</p>
-                    <p style="margin:0;">모든 초기값을 0으로 했을 때, <span class='red'>출력의 라플라스변환 / 입력의 라플라스변환</span> → G(s)=C(s)/R(s). 선형 시불변계에서만 정의</p>
+                    <p style="margin:0;">모든 초기값을 0으로 했을 때, <span class='red'>출력의 라플라스변환 / 입력의 라플라스변환</span> → G(s)=C(s)/R(s). 선형 시불변계(LTI)에서만 정의되며, 회로/시스템의 입출력 특성을 s영역에서 하나의 식으로 표현한다.</p>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 전달함수의 종류</p>
-                    <p style="margin:0;"><span class='blue'>비례요소</span>: G(s)=K / <span class='blue'>미분요소</span>: G(s)=Ks / <span class='blue'>적분요소</span>: G(s)=K/s / <span class='blue'>1차 지연요소</span>: G(s)=K/(1+Ts)</p>
+                    <p style="margin:0;"><span class='blue'>비례요소</span>: G(s)=K (입력에 상수배해서 그대로 출력) / <span class='blue'>미분요소</span>: G(s)=Ks / <span class='blue'>적분요소</span>: G(s)=K/s (입력을 누적) / <span class='blue'>1차 지연요소</span>: G(s)=K/(1+Ts) (RC 저역통과 필터처럼 서서히 반응) / <span class='blue'>2차 지연요소</span>: G(s)=K/(T²s²+2ζTs+1) (RLC 회로처럼 진동 가능한 응답)</p>
                 </div>
 
                     <div class="quiz-sec-header">
