@@ -432,6 +432,11 @@ function openTab(evt, tabId) {
     var dropdownList = document.getElementById('tab-dropdown-list');
     if (dropdownList) dropdownList.classList.remove('open');
 
+    // 단원학습 탭으로 돌아올 때는 항상 단원 목록부터 보여준다
+    if (tabId === 'tab-study') {
+        showSubMenu();
+    }
+
     window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
