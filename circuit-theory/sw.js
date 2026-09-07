@@ -1,7 +1,7 @@
 // 간단한 오프라인 캐시용 서비스워커 (네트워크 우선 방식)
 // 버전을 올리면(CACHE_NAME 변경) 예전 캐시를 지우고 새 파일로 갱신됩니다.
 // 캐시 이름 자체도 프로젝트 전용으로 분리하여 다른 전기 과목 앱과 섞이지 않습니다.
-const CACHE_NAME = 'electric-circuit-cache-v1';
+const CACHE_NAME = 'electric-circuit-cache-v2';
 const FILES_TO_CACHE = [
   './',
   './index.html',
