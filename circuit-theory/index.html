@@ -1,0 +1,1606 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>전기기사 - 회로이론 핵심 요약집</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+    <link rel="icon" href="icon-192.png">
+    <link rel="apple-touch-icon" href="icon-192.png">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="전기 회로이론">
+</head>
+<body>
+
+    <div class="container" id="app-viewport">
+
+        <!-- 뒤로가기 종료 확인 팝업 -->
+        <div id="exit-confirm-overlay" class="exit-confirm-overlay" style="display:none;">
+            <div class="exit-confirm-box">
+                <p class="exit-confirm-title">오늘 공부 정말 여기까지 하실 건가요?</p>
+                <div class="exit-confirm-btns">
+                    <button class="font-btn" onclick="cancelExitApp()">아니, 조만간 올게</button>
+                    <button class="font-btn" style="background-color:#ef4444; color:#ffffff; border-color:#ef4444;" onclick="confirmExitApp()">응, 여기까지가 한계야</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 상단 학습 도구 상자 -->
+        <div class="control-bar-group">
+            <div class="panel-toggle-bar" onclick="toggleTopPanel()">
+                <span class="panel-toggle-title"><span>⚙️ 학습 도구</span></span>
+                <span class="panel-toggle-btn" id="panel-toggle-btn-text">▼ 메뉴 펼치기</span>
+            </div>
+
+            <div id="collapsible-control-content" class="collapsed">
+                <div class="tool-divider-solid"></div>
+
+                <div class="tool-flat-section">
+                    <div class="font-control-row">
+                        <span class="tool-label">🔤 글자 크기</span>
+                        <div class="segmented-font-group">
+                            <button class="seg-font-btn" onclick="changeFontSize(-1)">가-</button>
+                            <button class="seg-font-btn" onclick="resetFontSize()">기본</button>
+                            <button class="seg-font-btn" onclick="changeFontSize(1)">가+</button>
+                        </div>
+                    </div>
+                    <div class="mode-btn-grid" style="margin-top: 4px;">
+                        <button class="mode-item-btn" id="memorize-toggle-btn" onclick="toggleMemorizeMode()">🙈 암기 OFF</button>
+                        <button class="mode-item-btn" id="chosung-toggle-btn" onclick="toggleChosungMode()">💡 초성 퀴즈</button>
+                        <button class="mode-item-btn" id="darkmode-toggle-btn" onclick="toggleDarkMode()">🌙 야간</button>
+                    </div>
+                    <button class="backup-action-btn" id="tab-menu-style-btn" onclick="toggleTabMenuStyle()" style="width:100%; margin-top:8px;">▾ 탭 메뉴: 드롭다운형</button>
+                    <button class="backup-action-btn" id="notify-toggle-btn" onclick="toggleDailyNotify()" style="width:100%; margin-top:8px;">🔔 매일 알림 켜기</button>
+                </div>
+
+                <div class="tool-divider-dashed"></div>
+
+                <div class="tool-flat-section">
+                    <span class="tool-label">💾 내 학습 데이터 보호</span>
+                    <div class="backup-btn-grid">
+                        <button class="backup-action-btn" onclick="exportUserData()">📥 메모·진도 백업</button>
+                        <button class="backup-action-btn" onclick="document.getElementById('import-file-input').click()">📤 백업 복원</button>
+                        <input type="file" id="import-file-input" style="display:none;" accept=".json" onchange="importUserData(event)">
+                    </div>
+                    <button class="backup-action-btn" onclick="resetAppData()" style="width:100%; margin-top:8px; background-color:#fee2e2; color:#991b1b; border-color:#fecaca;">🗑️ 이 앱 데이터 전체 초기화</button>
+                </div>
+
+                <div class="tool-flat-section">
+                    <span class="tool-label">🗓️ 필기시험일 설정</span>
+                    <div style="display:flex; gap:6px; margin-top:6px;">
+                        <input type="date" id="exam-date-input" class="mini-text-input" style="flex:1;">
+                        <button class="font-btn" onclick="setExamDate()">설정</button>
+                    </div>
+                    <p style="font-size:0.75em; color:var(--text-sub); margin:6px 0 0 0;">※ 정확한 회차 일정은 큐넷(Q-Net)에서 꼭 확인하세요.</p>
+                </div>
+
+                <div class="dday-quote-bar">
+                    <div class="dday-capsule" id="exam-dday-badge">시험일 미설정</div>
+                    <div class="daily-quote-text" id="daily-quote-box">문구 로딩 중...</div>
+                </div>
+
+                <div class="progress-box">
+                    <div class="progress-header">
+                        <span>📊 단원 학습 진도율</span>
+                        <span id="progress-text">0 / 13 (0%)</span>
+                    </div>
+                    <div class="progress-bar-track">
+                        <div class="progress-bar-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+
+                <div class="timer-row" id="timer-control-bar" style="display: none;">
+                    <span class="tool-label">⏱️ 표시시간</span>
+                    <div class="segmented-font-group">
+                        <button class="seg-font-btn active" id="timer-btn-3" onclick="setTimerSec(3)">3초</button>
+                        <button class="seg-font-btn" id="timer-btn-5" onclick="setTimerSec(5)">5초</button>
+                        <button class="seg-font-btn" id="timer-btn-0" onclick="setTimerSec(0)">누를때만</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="control-bar-group">
+            <div class="search-box-container">
+                <input type="text" id="search-input" class="search-input" placeholder="🔍 궁금한 용어 검색 (예: 테브난, 공진, 3상, 라플라스)" oninput="handleSearch()">
+                <button class="search-clear-btn" id="search-clear-btn" onclick="clearSearch()">✕</button>
+                <div id="search-results" class="search-results-list"></div>
+            </div>
+        </div>
+
+        <div class="tab-menu-wrapper">
+            <div class="tab-dropdown" id="tab-dropdown-container">
+                <button class="tab-dropdown-toggle" onclick="toggleTabDropdown()" style="display: flex; justify-content: center; align-items: center; width: 100%; position: relative; background-color: var(--primary-light); color: var(--primary); border: 1px solid rgba(37, 99, 235, 0.2); padding: 12px 16px; border-radius: var(--radius-md); font-weight: 800; font-size: 0.9em; cursor: pointer; min-height: 44px;">
+                    <span style="display: inline-flex; align-items: center; gap: 6px;">
+                        <span id="tab-dropdown-label">표지</span>
+                        <span id="tab-dropdown-arrow">▼</span>
+                    </span>
+                </button>
+                <div class="tab-dropdown-list" id="tab-dropdown-list">
+                    <button class="tab-btn active" onclick="openTab(event, 'tab-cover')">표지</button>
+                    <button class="tab-btn" onclick="openTab(event, 'tab-study')">📘 단원학습 (13단원)</button>
+                    <button class="tab-btn" onclick="openTab(event, 'tab-exam')">🎲 랜덤 모의고사</button>
+                    <button class="tab-btn" onclick="openTab(event, 'tab-wrong')">📕 오답노트</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 표지 탭 -->
+        <div id="tab-cover" class="tab-content active">
+            <div class="cover-page">
+                <div class="cover-title">전기기사 필기</div>
+                <div class="cover-subtitle">회로이론 - 핵심 요약집</div>
+                <div class="cover-divider"></div>
+                <div class="cover-info">
+                    <p>범위: 13단원 (전기이론 ~ 전달함수)</p>
+                    <p>확인문제: 단원별 4~6문제 · 총 55문제</p>
+                    <p>버전: V1.0</p>
+                </div>
+            </div>
+            <div class="box">
+                <b>📖 이 요약집 사용법</b>
+                <ul style="margin: 10px 0 0 0; padding-left: 18px; line-height: 1.7;">
+                    <li><b>단원학습</b> 탭에서 이론 요약을 읽고 바로 아래 확인문제를 풀어보세요.</li>
+                    <li>상단 <b>⚙️ 학습 도구</b>에서 <b>암기 모드</b>를 켜면 공식·핵심어가 가려지고, 탭하면 잠깐 보였다가 다시 가려집니다.</li>
+                    <li><b>초성 퀴즈</b> 모드는 핵심 용어를 초성(ㄱㄴㄷ)으로 바꿔서 스스로 떠올려보게 합니다.</li>
+                    <li>틀린 문제는 자동으로 <b>오답노트</b> 탭에 쌓입니다.</li>
+                    <li>모든 단원을 학습했다면 <b>랜덤 모의고사</b>로 실전처럼 섞어서 풀어보세요.</li>
+                    <li>진도·오답노트는 이 브라우저에만 저장되니, 기기를 바꾸기 전 <b>백업</b>을 꼭 받아두세요.</li>
+                </ul>
+            </div>
+            <div class="box" style="font-size:0.85em; color:var(--text-sub);">
+                ⚠️ 이 자료는 학습 보조용 요약이며, 공식 교재·기출문제를 대체하지 않습니다. 계산 문제는 반드시 손으로 직접 풀어보며 검산하는 습관을 들이세요.
+            </div>
+        </div>
+
+        <!-- 단원학습 탭 -->
+        <div id="tab-study" class="tab-content">
+            <h1>전기기사 회로이론 - <br>📘 단원학습</h1>
+            <div style="text-align: right; font-size: 0.8em; color: var(--text-sub); margin-top: 4px; margin-bottom: 12px;">
+                <span>회로이론 13단원 · 확인문제 55문제</span>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; margin-bottom: 10px;">
+                <button class="font-btn" onclick="filterBookmarks()" style="font-size: 0.82em;">⭐ 북마크 모아보기</button>
+            </div>
+
+            <div id="sub-page-menu">
+                <div class="sub-nav-grid" id="main-menu-grid">
+                        <div class="sub-nav-card" onclick="showSubPage(1)">
+                            <span>1. 전기이론</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-1" style="display:none;">✅ 완료</span>
+                                <span id="card-star-1"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(2)">
+                            <span>2. 정현파 교류</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-2" style="display:none;">✅ 완료</span>
+                                <span id="card-star-2"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(3)">
+                            <span>3. R-L-C 교류회로</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-3" style="display:none;">✅ 완료</span>
+                                <span id="card-star-3"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(4)">
+                            <span>4. 교류전력</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-4" style="display:none;">✅ 완료</span>
+                                <span id="card-star-4"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(5)">
+                            <span>5. 인덕턴스 및 벡터궤적</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-5" style="display:none;">✅ 완료</span>
+                                <span id="card-star-5"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(6)">
+                            <span>6. 회로망</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-6" style="display:none;">✅ 완료</span>
+                                <span id="card-star-6"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(7)">
+                            <span>7. 대칭 n상 교류</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-7" style="display:none;">✅ 완료</span>
+                                <span id="card-star-7"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(8)">
+                            <span>8. 대칭좌표법</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-8" style="display:none;">✅ 완료</span>
+                                <span id="card-star-8"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(9)">
+                            <span>9. 비정현파 교류</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-9" style="display:none;">✅ 완료</span>
+                                <span id="card-star-9"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(10)">
+                            <span>10. 단자망</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-10" style="display:none;">✅ 완료</span>
+                                <span id="card-star-10"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(11)">
+                            <span>11. 라플라스 변환</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-11" style="display:none;">✅ 완료</span>
+                                <span id="card-star-11"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(12)">
+                            <span>12. 과도현상</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-12" style="display:none;">✅ 완료</span>
+                                <span id="card-star-12"></span>
+                            </div>
+                        </div>
+                        <div class="sub-nav-card" onclick="showSubPage(13)">
+                            <span>13. 전달함수</span>
+                            <div class="card-status-box">
+                                <span class="card-done-badge" id="card-done-13" style="display:none;">✅ 완료</span>
+                                <span id="card-star-13"></span>
+                            </div>
+                        </div>
+                </div>
+            </div>
+
+                <div id="sub-page-1" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">1 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-1" onchange="toggleComplete(1)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-1" onclick="toggleBookmark(1)">☆</button>
+                        </div>
+                    </div>
+                    <h2>1. 전기이론</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 전기회로</p>
+                    <p style="margin:0;">전류가 전원(+극)에서 나와 부하를 거쳐 전원(-극)으로 돌아오는 <span class='red'>순환 경로</span>를 전기회로라 한다. 전류가 흐르려면 ①폐회로(닫힌 경로)가 구성되고 ②전압(기전력)이 인가되어야 한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전하와 전류의 정의</p>
+                    <p style="margin:0;">전하량 Q[C], 전자 1개의 전하량 e = <span class='blue'>-1.602×10⁻¹⁹[C]</span>. 전류는 단위시간 동안 이동한 전하량으로 정의: 직류 <span class='blue'>I = Q/t</span>[A], 교류(순시전류) <span class='blue'>i = dq/dt</span>[A], 반대로 q=∫i dt[C].</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전압(전위차)의 정의</p>
+                    <p style="margin:0;">단위 정전하(+1C)가 두 점 사이를 이동할 때 얻거나 잃는 에너지(일) — 직류: <span class='mint'>V = W/Q</span>[V], W=QV[J] / 교류: v=dw/dq[V]</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 옴의 법칙</p>
+                    <p style="margin:0;"><span class='red'>V = IR</span>, I = V/R, R = V/I — 전압은 전류·저항에 비례, 전류는 전압에 비례·저항에 반비례한다. (예) R=10Ω에 V=100V를 걸면 I=100/10=10A.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 키르히호프의 법칙</p>
+                    <p style="margin:0;"><span class='blue'>KCL(전류법칙)</span>: 한 절점에서 유입 전류의 합 = 유출 전류의 합 (대수합은 0) / <span class='blue'>KVL(전압법칙)</span>: 폐회로에서 기전력의 합 = 전압강하의 합. 회로망 해석의 가장 기본이 되는 두 법칙이다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. 저항의 접속</p>
+                    <p style="margin:0;">직렬: <span class='mint'>R = R1+R2+...+Rn</span> (전류 일정, 전압은 저항에 비례 분배) / 병렬: <span class='mint'>1/R = 1/R1+1/R2+...+1/Rn</span> (전압 일정, 전류는 저항에 반비례 분배). 저항 2개 병렬이면 R=R1R2/(R1+R2). 동일 저항 R을 n개 직렬하면 nR, 병렬하면 R/n.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">5. 분압법칙 및 분류법칙</p>
+                    <p style="margin:0;">직렬회로 분압: <span class='orange'>V1 = R1/(R1+R2)×V</span> (자기 저항이 클수록 걸리는 전압도 큼) / 병렬회로 분류: <span class='orange'>I1 = R2/(R1+R2)×I</span> (분류법칙은 반대로 '상대편' 저항의 비율을 곱한다는 점에 주의).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">6. 전지의 직·병렬 연결</p>
+                    <p style="margin:0;">기전력 E, 내부저항 r인 전지 n개 — 직렬연결: 전압 <span class='red'>nE</span>, 내부저항 <span class='red'>nr</span>, 부하전류 I=nE/(R+nr) → 큰 전압이 필요할 때 사용 / 병렬연결: 전압 <span class='blue'>E</span>(불변), 내부저항 <span class='blue'>r/n</span>, 전류 I=E/(R+r/n) → 큰 전류(오래 쓰는 용량)가 필요할 때 사용.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">7. 전력, 전력량</p>
+                    <p style="margin:0;">전력 <span class='mint'>P = VI = I²R = V²/R</span>[W] / 전력량(일) <span class='mint'>W = Pt</span>[J=W·sec] / 줄의 법칙: 1kWh=3.6×10⁶J, 1J≒0.24cal, <span class='mint'>1kWh=860kcal</span> — 저항에서 발생하는 열량 H=0.24Pt[cal]</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">8. 휘스톤 브리지</p>
+                    <p style="margin:0;">평형 조건: <span class='orange'>R1R3 = R2R4</span> — 마주보는 저항의 곱이 같으면 브리지 중간의 검류계(G)에 전류가 흐르지 않는다(두 접점의 전위가 같아지므로). 미지저항 측정에 널리 사용된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">9. 배율기와 분류기</p>
+                    <p style="margin:0;"><span class='red'>배율기</span>: 전압계 측정범위 확대용. 내부저항 Rv인 전압계에 <span class='red'>직렬</span>로 큰 저항을 연결 → Rm=(m-1)Rv (m: 배율) / <span class='blue'>분류기</span>: 전류계 측정범위 확대용. 내부저항 Ra인 전류계에 <span class='blue'>병렬</span>로 작은 저항을 연결 → Rs=Ra/(n-1) (n: 배율)</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (6문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-1">점수: 0 / 100점 (정답 0 / 6문제)</span></div>
+                    <div id="unit-quiz-1" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u1-1" data-qid="u1-1">
+                    <button class="font-btn" onclick="resetAnswer('u1-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 전류가 전원의 (+)극에서 나와 회로를 거쳐 돌아오는 경로를 무엇이라 하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-1', this, '전기회로')">전기회로</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-1', this, '전기회로')">자기회로</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-1', this, '전기회로')">등가회로</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-1', this, '전기회로')">개방회로</button>
+                    </div>
+                    <div id="q-result-u1-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-1" class="note" style="display:none;">💡 해설: 전류가 순환하는 경로를 전기회로라 합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u1-2" data-qid="u1-2">
+                    <button class="font-btn" onclick="resetAnswer('u1-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 저항 R=10Ω에 전압 V=100V를 걸었을 때 흐르는 전류 I[A]는? (숫자만) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u1-2" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u1-2', document.getElementById('input-u1-2'), ['10'])">확인</button>
+                    </div>
+                    <div id="q-result-u1-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-2" class="note" style="display:none;">💡 해설: I=V/R=100/10=10A 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u1-3" data-qid="u1-3">
+                    <button class="font-btn" onclick="resetAnswer('u1-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 직렬회로에서 전체 저항이 R1+R2일 때, R1에 걸리는 전압(분압)은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-3', this, 'R1/(R1+R2)×V')">R1/(R1+R2)×V</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-3', this, 'R1/(R1+R2)×V')">R2/(R1+R2)×V</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-3', this, 'R1/(R1+R2)×V')">(R1+R2)/R1×V</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-3', this, 'R1/(R1+R2)×V')">V/2</button>
+                    </div>
+                    <div id="q-result-u1-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-3" class="note" style="display:none;">💡 해설: 분압법칙: V1 = R1/(R1+R2) × V 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u1-4" data-qid="u1-4">
+                    <button class="font-btn" onclick="resetAnswer('u1-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 기전력 E, 내부저항 r인 전지 n개를 직렬로 연결했을 때 전체 내부저항은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-4', this, 'nr')">r/n</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-4', this, 'nr')">nr</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-4', this, 'nr')">r</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-4', this, 'nr')">r²</button>
+                    </div>
+                    <div id="q-result-u1-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-4" class="note" style="display:none;">💡 해설: 전지를 직렬연결하면 내부저항도 n배가 되어 nr이 됩니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u1-5" data-qid="u1-5">
+                    <button class="font-btn" onclick="resetAnswer('u1-5')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q5. 휘스톤 브리지가 평형일 때 성립하는 조건은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-5', this, 'R1R3=R2R4')">R1+R3=R2+R4</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-5', this, 'R1R3=R2R4')">R1R3=R2R4</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-5', this, 'R1R3=R2R4')">R1/R3=R2+R4</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-5', this, 'R1R3=R2R4')">R1-R3=R2-R4</button>
+                    </div>
+                    <div id="q-result-u1-5" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-5" class="note" style="display:none;">💡 해설: 휘스톤 브리지 평형조건은 마주보는 저항의 곱이 같은 R1R3=R2R4 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u1-6" data-qid="u1-6">
+                    <button class="font-btn" onclick="resetAnswer('u1-6')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q6. 전압계의 측정범위를 확대하기 위해 직렬로 연결하는 것은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-6', this, '배율기')">분류기</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-6', this, '배율기')">배율기</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-6', this, '배율기')">축전기</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u1-6', this, '배율기')">인덕터</button>
+                    </div>
+                    <div id="q-result-u1-6" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u1-6" class="note" style="display:none;">💡 해설: 배율기는 전압계에 직렬로 연결해 측정범위를 넓히는 저항입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-1')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-1')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-1" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(1)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-2" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">2 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-2" onchange="toggleComplete(2)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-2" onclick="toggleBookmark(2)">☆</button>
+                        </div>
+                    </div>
+                    <h2>2. 정현파 교류</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 교류</p>
+                    <p style="margin:0;">시간에 따라 크기와 방향이 주기적으로 변하는 전류·전압. 발전기의 회전 원리상 자연스럽게 <span class='red'>정현파(사인파)</span> 형태로 나타나며, 교류 해석의 기본 파형이 된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 용어(주기/주파수/각속도)</p>
+                    <p style="margin:0;">주기 <span class='blue'>T=1/f</span>[s] (파형이 한 번 반복되는 데 걸리는 시간) / 주파수 <span class='blue'>f</span>[Hz] (1초에 반복되는 횟수, 우리나라 상용주파수 60Hz) / 각속도(각주파수) <span class='blue'>ω=2πf=2π/T</span>[rad/s]</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">위상과 위상차</p>
+                    <p style="margin:0;">기준 파형보다 앞서면 <span class='mint'>진상(위상이 앞선다)</span>, 뒤지면 <span class='mint'>지상(위상이 뒤진다)</span>이라 한다. 두 파형의 위상차 θ가 0이면 동상.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 정현파 교류의 표시</p>
+                    <p style="margin:0;">순시값 <span class='mint'>v(t) = Vm sin(ωt+θ)</span> — Vm: 최댓값(진폭), ωt+θ: 위상각. t=0일 때 순시값은 Vm sinθ 이다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. 파형별 실효값·평균값·파고율·파형률</p>
+                    <p style="margin:0;">정현파: 실효값=<span class='orange'>Vm/√2</span>(≈0.707Vm), 평균값=<span class='orange'>2Vm/π</span>(≈0.637Vm) / <span class='orange'>파고율</span>(최댓값/실효값)=√2≈1.414 / <span class='orange'>파형률</span>(실효값/평균값)=π/(2√2)≈1.11. 실효값은 '같은 일을 하는 직류값'이라는 의미로, 전력 계산 등 실무 계산의 기준이 된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">다른 파형의 값(참고)</p>
+                    <p style="margin:0;">구형파: 실효값=평균값=최댓값(파고율=파형률=1) / 삼각파(톱니파): 실효값=Vm/√3, 평균값=Vm/2</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">5. 정현파 교류의 다양한 표현법</p>
+                    <p style="margin:0;">①삼각함수 표시 v(t)=Vm sin(ωt+θ) / ②<span class='red'>페이저(극형식)</span> 표시 V∠θ (크기와 위상각만으로 표현, 실효값 기준이 관례) / ③<span class='red'>복소수(직각좌표)</span> 표시 a+jb (a=실수부, b=허수부, V=√(a²+b²), θ=tan⁻¹(b/a)) — 세 표현은 서로 자유롭게 변환 가능하며 회로 계산에서는 페이저·복소수 표현을 주로 사용한다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (5문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-2">점수: 0 / 100점 (정답 0 / 5문제)</span></div>
+                    <div id="unit-quiz-2" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u2-1" data-qid="u2-1">
+                    <button class="font-btn" onclick="resetAnswer('u2-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 주파수가 60Hz일 때 주기 T[s]는? (분수 형태로 1/60 입력) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u2-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u2-1', document.getElementById('input-u2-1'), ['1/60'])">확인</button>
+                    </div>
+                    <div id="q-result-u2-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u2-1" class="note" style="display:none;">💡 해설: T=1/f=1/60초 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u2-2" data-qid="u2-2">
+                    <button class="font-btn" onclick="resetAnswer('u2-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 주파수 60Hz의 각속도 ω[rad/s]는? (정수로 입력) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u2-2" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u2-2', document.getElementById('input-u2-2'), ['377'])">확인</button>
+                    </div>
+                    <div id="q-result-u2-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u2-2" class="note" style="display:none;">💡 해설: ω=2πf=2π×60≈377 rad/s 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u2-3" data-qid="u2-3">
+                    <button class="font-btn" onclick="resetAnswer('u2-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 정현파의 실효값을 최댓값 Vm으로 나타내면?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-3', this, 'Vm/√2')">Vm/√2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-3', this, 'Vm/√2')">2Vm/π</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-3', this, 'Vm/√2')">Vm/2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-3', this, 'Vm/√2')">√2 Vm</button>
+                    </div>
+                    <div id="q-result-u2-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u2-3" class="note" style="display:none;">💡 해설: 정현파의 실효값은 Vm/√2 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u2-4" data-qid="u2-4">
+                    <button class="font-btn" onclick="resetAnswer('u2-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 정현파의 파고율(최댓값/실효값)은 약 얼마인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-4', this, '1.414')">1</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-4', this, '1.414')">1.11</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-4', this, '1.414')">1.414</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-4', this, '1.414')">2</button>
+                    </div>
+                    <div id="q-result-u2-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u2-4" class="note" style="display:none;">💡 해설: 파고율은 √2≈1.414 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u2-5" data-qid="u2-5">
+                    <button class="font-btn" onclick="resetAnswer('u2-5')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q5. 정현파 교류를 크기와 위상각으로 표시하는 방법을 무엇이라 하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-5', this, '페이저(극형식) 표시')">페이저(극형식) 표시</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-5', this, '페이저(극형식) 표시')">순시값 표시</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-5', this, '페이저(극형식) 표시')">적분 표시</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u2-5', this, '페이저(극형식) 표시')">로그 표시</button>
+                    </div>
+                    <div id="q-result-u2-5" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u2-5" class="note" style="display:none;">💡 해설: 페이저(극형식)는 V∠θ와 같이 크기와 위상각으로 표시하는 방법입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-2')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-2')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-2" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(2)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-3" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">3 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-3" onchange="toggleComplete(3)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-3" onclick="toggleBookmark(3)">☆</button>
+                        </div>
+                    </div>
+                    <h2>3. R-L-C 교류회로</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 수동소자</p>
+                    <p style="margin:0;">에너지를 소비하거나 저장만 하고 스스로 발생시키지 않는 소자 — 저항 R(소비), 인덕터 L(자기에너지 저장), 커패시터 C(전기에너지 저장)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 수동소자의 응답</p>
+                    <p style="margin:0;">저항 R: 전압·전류 <span class='red'>동상</span>, Z=R / 인덕터 L: 전류가 전압보다 <span class='blue'>90° 뒤짐(지상)</span>, Z=jωL, 유도리액턴스 XL=ωL / 커패시터 C: 전류가 전압보다 <span class='mint'>90° 앞섬(진상)</span>, Z=1/jωC=-j/(ωC), 용량리액턴스 XC=1/(ωC)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">주파수와 리액턴스의 관계</p>
+                    <p style="margin:0;">XL=ωL은 주파수에 <span class='orange'>비례</span>(주파수가 높을수록 인덕터는 전류를 더 방해) / XC=1/(ωC)는 주파수에 <span class='orange'>반비례</span>(주파수가 높을수록 커패시터는 전류를 더 잘 통과)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. R-L-C 직렬회로</p>
+                    <p style="margin:0;">임피던스 <span class='orange'>Z = R + j(XL−XC)</span>, 크기 |Z|=√(R²+(XL−XC)²), 위상각 θ=tan⁻¹((XL-XC)/R). 전류는 공통이고 각 소자에 걸리는 전압이 위상차를 가진다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. R-L-C 병렬회로</p>
+                    <p style="margin:0;">어드미턴스 <span class='red'>Y = 1/R + j(1/XC − 1/XL) = G + j(BC−BL)</span> [℧,S] — G: 컨덕턴스(1/R), BC/BL: 서셉턴스. 전압이 공통이고 각 소자에 흐르는 전류가 위상차를 가진다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">5. 공진회로</p>
+                    <p style="margin:0;">직렬공진(XL=XC): 리액턴스가 상쇄되어 임피던스 <span class='blue'>최소(=R)</span>, 전류 최대, 역률=1 / 병렬공진: 반대로 임피던스 <span class='blue'>최대</span>, 전류 최소 / 공진주파수 <span class='blue'>f0=1/(2π√LC)</span> — L, C 값으로 결정되며 R과는 무관</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">선택도(첨예도) Q</p>
+                    <p style="margin:0;">직렬공진회로의 선택도 <span class='mint'>Q = (1/R)√(L/C) = ω0L/R</span>. Q가 클수록 공진곡선이 뾰족해져 대역폭이 좁아지고, 특정 주파수 선택 성능(라디오 동조회로 등)이 좋아진다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (5문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-3">점수: 0 / 100점 (정답 0 / 5문제)</span></div>
+                    <div id="unit-quiz-3" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u3-1" data-qid="u3-1">
+                    <button class="font-btn" onclick="resetAnswer('u3-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 인덕터(L)에서 전류는 전압보다 위상이 어떻게 되는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-1', this, '90° 뒤진다')">90° 앞선다</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-1', this, '90° 뒤진다')">90° 뒤진다</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-1', this, '90° 뒤진다')">동상이다</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-1', this, '90° 뒤진다')">180° 반대</button>
+                    </div>
+                    <div id="q-result-u3-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u3-1" class="note" style="display:none;">💡 해설: 인덕터는 전류가 전압보다 90도 뒤지는(지상) 특성을 가집니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u3-2" data-qid="u3-2">
+                    <button class="font-btn" onclick="resetAnswer('u3-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. R-L-C 직렬회로의 임피던스 Z를 나타낸 식은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-2', this, 'R+j(XL-XC)')">R+j(XL-XC)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-2', this, 'R+j(XL-XC)')">R-j(XL+XC)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-2', this, 'R+j(XL-XC)')">R×(XL-XC)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-2', this, 'R+j(XL-XC)')">R/(XL-XC)</button>
+                    </div>
+                    <div id="q-result-u3-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u3-2" class="note" style="display:none;">💡 해설: 직렬회로의 임피던스는 Z=R+j(XL-XC) 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u3-3" data-qid="u3-3">
+                    <button class="font-btn" onclick="resetAnswer('u3-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. R-L-C 병렬회로에서 저항의 역수(R의 컨덕턴스)를 나타내는 기호는? (알파벳 1글자) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u3-3" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u3-3', document.getElementById('input-u3-3'), ['G'])">확인</button>
+                    </div>
+                    <div id="q-result-u3-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u3-3" class="note" style="display:none;">💡 해설: 어드미턴스 Y=G+jB에서 G는 컨덕턴스(1/R)입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u3-4" data-qid="u3-4">
+                    <button class="font-btn" onclick="resetAnswer('u3-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 직렬 공진 시 회로의 임피던스는 어떻게 되는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-4', this, '최소(=R)')">최대(개방)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-4', this, '최소(=R)')">최소(=R)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-4', this, '최소(=R)')">0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u3-4', this, '최소(=R)')">무한대</button>
+                    </div>
+                    <div id="q-result-u3-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u3-4" class="note" style="display:none;">💡 해설: 직렬공진 시 리액턴스가 상쇄되어 임피던스는 R만 남아 최소가 됩니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u3-5" data-qid="u3-5">
+                    <button class="font-btn" onclick="resetAnswer('u3-5')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q5. 공진주파수 f0 = 1/(2π√(  ))에서 괄호 안은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u3-5" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u3-5', document.getElementById('input-u3-5'), ['LC'])">확인</button>
+                    </div>
+                    <div id="q-result-u3-5" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u3-5" class="note" style="display:none;">💡 해설: 공진주파수 f0=1/(2π√LC) 입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-3')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-3')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-3" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(3)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-4" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">4 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-4" onchange="toggleComplete(4)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-4" onclick="toggleBookmark(4)">☆</button>
+                        </div>
+                    </div>
+                    <h2>4. 교류전력</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 각 회로소자에서의 교류전력</p>
+                    <p style="margin:0;">저항 R: 전압·전류가 동상이므로 <span class='red'>유효전력만 소비</span>(P=VIcosθ=I²R) / 인덕터 L, 커패시터 C: 전압·전류가 90° 차이나므로 <span class='red'>무효전력만 존재</span>, 평균 유효전력은 0 (에너지를 저장했다가 그대로 돌려줌)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">전력의 3요소</p>
+                    <p style="margin:0;">유효전력 <span class='blue'>P=VIcosθ</span>[W] (실제로 소비되는 전력) / 무효전력 <span class='blue'>Q=VIsinθ</span>[Var] (소자를 오가기만 하는 전력) / 피상전력 <span class='blue'>S=VI=√(P²+Q²)</span>[VA] (전원이 실제로 공급해야 하는 총 용량) / 역률 <span class='blue'>cosθ=P/S</span></p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 최대전력의 전송</p>
+                    <p style="margin:0;">내부저항 R0인 전원에서 부하저항 <span class='mint'>RL=R0</span>일 때(정합) 최대전력이 전달되며, 이때 <span class='mint'>Pmax = E²/4R0</span>. 교류에서 부하가 임피던스(ZL)라면 ZL=Z0*(내부임피던스의 켤레복소수)일 때 최대전력 전달.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 복소전력과 전력의 측정</p>
+                    <p style="margin:0;">복소전력 <span class='orange'>S = P + jQ = VI*</span> (I*는 전류의 켤레복소수) — 크기 |S|는 피상전력이며, 실수부가 유효전력 P, 허수부가 무효전력 Q이다. 단상 전력계로 전압·전류·전력을 측정해 역률을 역산할 수도 있다(cosθ=P/VI).</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-4">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-4" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u4-1" data-qid="u4-1">
+                    <button class="font-btn" onclick="resetAnswer('u4-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 인덕터(L)와 커패시터(C)에서 평균 유효전력은 얼마인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-1', this, '0')">최대</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-1', this, '0')">0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-1', this, '0')">무한대</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-1', this, '0')">전원과 같다</button>
+                    </div>
+                    <div id="q-result-u4-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u4-1" class="note" style="display:none;">💡 해설: L, C는 에너지를 저장·방출만 하므로 평균 유효전력은 0입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u4-2" data-qid="u4-2">
+                    <button class="font-btn" onclick="resetAnswer('u4-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 내부저항 R0인 전원에서 부하에 최대전력이 전달되는 조건은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-2', this, 'RL=R0')">RL=0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-2', this, 'RL=R0')">RL=R0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-2', this, 'RL=R0')">RL=∞</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-2', this, 'RL=R0')">RL=2R0</button>
+                    </div>
+                    <div id="q-result-u4-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u4-2" class="note" style="display:none;">💡 해설: 부하저항이 내부저항과 같을 때(정합) 최대전력이 전달됩니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u4-3" data-qid="u4-3">
+                    <button class="font-btn" onclick="resetAnswer('u4-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 기전력 E, 내부저항 R0일 때 최대전력 Pmax 공식은 E²/(   )이다. 괄호 안은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u4-3" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u4-3', document.getElementById('input-u4-3'), ['4R0', '4R'])">확인</button>
+                    </div>
+                    <div id="q-result-u4-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u4-3" class="note" style="display:none;">💡 해설: 최대전력 Pmax = E²/4R0 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u4-4" data-qid="u4-4">
+                    <button class="font-btn" onclick="resetAnswer('u4-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 복소전력 S=VI*에서 I*는 무엇을 의미하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-4', this, '전류의 켤레복소수')">전류의 제곱</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-4', this, '전류의 켤레복소수')">전류의 켤레복소수</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-4', this, '전류의 켤레복소수')">전류의 역수</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u4-4', this, '전류의 켤레복소수')">전류의 미분값</button>
+                    </div>
+                    <div id="q-result-u4-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u4-4" class="note" style="display:none;">💡 해설: 복소전력은 전압과 전류 켤레복소수의 곱으로 정의됩니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-4')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-4')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-4" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(4)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-5" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">5 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-5" onchange="toggleComplete(5)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-5" onclick="toggleBookmark(5)">☆</button>
+                        </div>
+                    </div>
+                    <h2>5. 인덕턴스 및 벡터궤적</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 자기 인덕턴스와 상호 인덕턴스</p>
+                    <p style="margin:0;">자기인덕턴스 <span class='red'>L=Nφ/I</span>[H] (코일이 자기 자신에 만드는 자속과 전류의 비) / 상호인덕턴스 M: 한 코일의 전류 변화가 다른 코일에 유도기전력을 만드는 정도 / 결합계수 <span class='red'>k=M/√(L1L2)</span> (0≤k≤1, k=1이면 완전결합)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 인덕턴스의 접속(합성 인덕턴스)</p>
+                    <p style="margin:0;">가동(가극성) 결합: 자속이 서로 보강 → <span class='blue'>L=L1+L2+2M</span> / 차동(감극성) 결합: 자속이 서로 상쇄 → <span class='blue'>L=L1+L2-2M</span> — 두 코일을 감은 방향에 따라 결정된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 이상 변압기</p>
+                    <p style="margin:0;">권수비 <span class='mint'>a = N1/N2 = V1/V2 = I2/I1</span> — 1차 권선수가 많을수록(a>1) 전압을 낮추고 전류를 높이는 강압, 반대는 승압. 이상 변압기는 손실이 없다고 가정한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. 벡터 궤적</p>
+                    <p style="margin:0;">회로의 주파수나 소자값을 0→∞로 변화시킬 때 임피던스(또는 어드미턴스) 벡터의 끝점이 그리는 자취. <span class='orange'>R-L 직렬회로</span>에서 리액턴스(ωL)를 0→∞로 변화시키면 임피던스 벡터는 <span class='orange'>반원</span> 궤적을 그린다. 이러한 궤적 해석은 필터·공진회로 설계에서 특성을 파악하는 데 사용된다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-5">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-5" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u5-1" data-qid="u5-1">
+                    <button class="font-btn" onclick="resetAnswer('u5-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 결합계수 k = M/√(   )에서 괄호 안은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u5-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u5-1', document.getElementById('input-u5-1'), ['L1L2', 'L1×L2'])">확인</button>
+                    </div>
+                    <div id="q-result-u5-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u5-1" class="note" style="display:none;">💡 해설: 결합계수 k=M/√(L1L2) 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u5-2" data-qid="u5-2">
+                    <button class="font-btn" onclick="resetAnswer('u5-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 가동(가극성) 결합일 때 합성 인덕턴스 L은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-2', this, 'L1+L2+2M')">L1+L2-2M</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-2', this, 'L1+L2+2M')">L1+L2+2M</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-2', this, 'L1+L2+2M')">L1×L2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-2', this, 'L1+L2+2M')">L1/L2</button>
+                    </div>
+                    <div id="q-result-u5-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u5-2" class="note" style="display:none;">💡 해설: 가동결합은 자속이 보강되어 L=L1+L2+2M 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u5-3" data-qid="u5-3">
+                    <button class="font-btn" onclick="resetAnswer('u5-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 이상 변압기의 권수비 a = N1/N2 = V1/V2 = ?(전류에 대한 관계식) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u5-3" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u5-3', document.getElementById('input-u5-3'), ['I2/I1'])">확인</button>
+                    </div>
+                    <div id="q-result-u5-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u5-3" class="note" style="display:none;">💡 해설: 권수비 a=N1/N2=V1/V2=I2/I1 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u5-4" data-qid="u5-4">
+                    <button class="font-btn" onclick="resetAnswer('u5-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. R-L 직렬회로에서 리액턴스를 0에서 무한대로 변화시킬 때 임피던스 벡터의 궤적은 어떤 모양인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-4', this, '반원')">직선</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-4', this, '반원')">반원</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-4', this, '반원')">포물선</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u5-4', this, '반원')">타원</button>
+                    </div>
+                    <div id="q-result-u5-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u5-4" class="note" style="display:none;">💡 해설: R-L 직렬회로의 임피던스 벡터궤적은 반원을 그립니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-5')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-5')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-5" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(5)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-6" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">6 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-6" onchange="toggleComplete(6)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-6" onclick="toggleBookmark(6)">☆</button>
+                        </div>
+                    </div>
+                    <h2>6. 회로망</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 전원</p>
+                    <p style="margin:0;"><span class='red'>전압원</span>: 부하에 관계없이 일정한 전압 유지(이상적: 내부저항 0) / <span class='blue'>전류원</span>: 부하에 관계없이 일정한 전류 유지(이상적: 내부저항 ∞). 실제 전원은 내부저항(임피던스)을 가지므로 부하에 따라 단자전압이 변한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 선형 회로망 정리 - 중첩의 정리</p>
+                    <p style="margin:0;">여러 독립 전원이 있는 선형회로에서, <span class='mint'>전압원은 단락·전류원은 개방</span>한 뒤 한 전원씩 따로 해석하고 그 결과를 모두 더한다. 선형회로에서만 성립한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">테브난의 정리</p>
+                    <p style="margin:0;">복잡한 두 단자망을 <span class='mint'>등가전압원 Vth와 등가저항 Rth의 직렬</span>로 바꿀 수 있다는 정리. Vth는 두 단자를 개방했을 때의 전압, Rth는 전압원 단락·전류원 개방 후 두 단자에서 본 저항이다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">노턴의 정리</p>
+                    <p style="margin:0;">테브난의 정리를 전류원 기준으로 바꾼 것 — <span class='mint'>등가전류원 IN과 등가저항 RN의 병렬</span>. IN=Vth/Rth, RN=Rth (테브난과 노턴은 서로 변환 가능한 쌍둥이 정리).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">밀만의 정리</p>
+                    <p style="margin:0;">여러 개의 전압원(각각 내부저항 포함)이 병렬로 연결되어 있을 때, 한 번에 등가전압을 구하는 공식 — <span class='orange'>Vab = (ΣE/R) / (Σ1/R)</span> 형태로, 각 지로의 (기전력/저항)의 합을 (1/저항)의 합으로 나눈다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-6">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-6" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u6-1" data-qid="u6-1">
+                    <button class="font-btn" onclick="resetAnswer('u6-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 이상적인 전압원의 내부저항은 얼마인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-1', this, '0')">0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-1', this, '0')">무한대</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-1', this, '0')">1Ω</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-1', this, '0')">알 수 없다</button>
+                    </div>
+                    <div id="q-result-u6-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u6-1" class="note" style="display:none;">💡 해설: 이상적 전압원은 내부저항이 0이라 부하와 관계없이 전압이 일정합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u6-2" data-qid="u6-2">
+                    <button class="font-btn" onclick="resetAnswer('u6-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 여러 전원이 있을 때 전압원은 단락, 전류원은 개방하여 각각 해석 후 합산하는 정리는?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-2', this, '중첩의 정리')">중첩의 정리</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-2', this, '중첩의 정리')">테브난의 정리</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-2', this, '중첩의 정리')">노턴의 정리</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-2', this, '중첩의 정리')">밀만의 정리</button>
+                    </div>
+                    <div id="q-result-u6-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u6-2" class="note" style="display:none;">💡 해설: 중첩의 정리에 대한 설명입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u6-3" data-qid="u6-3">
+                    <button class="font-btn" onclick="resetAnswer('u6-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 테브난 등가회로는 전압원과 무엇의 직렬 조합인가? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u6-3" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u6-3', document.getElementById('input-u6-3'), ['저항', '임피던스'])">확인</button>
+                    </div>
+                    <div id="q-result-u6-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u6-3" class="note" style="display:none;">💡 해설: 테브난 등가회로는 Vth와 Rth의 직렬 조합입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u6-4" data-qid="u6-4">
+                    <button class="font-btn" onclick="resetAnswer('u6-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 노턴 등가회로는 전류원과 저항의 어떤 조합인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-4', this, '병렬')">직렬</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-4', this, '병렬')">병렬</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-4', this, '병렬')">혼합</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u6-4', this, '병렬')">없음</button>
+                    </div>
+                    <div id="q-result-u6-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u6-4" class="note" style="display:none;">💡 해설: 노턴 등가회로는 전류원과 저항의 병렬 조합입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-6')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-6')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-6" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(6)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-7" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">7 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-7" onchange="toggleComplete(7)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-7" onclick="toggleBookmark(7)">☆</button>
+                        </div>
+                    </div>
+                    <h2>7. 대칭 n상 교류</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 평형 3상 교류</p>
+                    <p style="margin:0;">크기가 같고 위상이 <span class='red'>120°씩</span> 차이나는 세 개의 정현파 전압/전류. Y결선: 선간전압=<span class='red'>√3×상전압</span>(위상 30° 앞섬), 선전류=상전류 / Δ결선: 선간전압=상전압, 선전류=<span class='red'>√3×상전류</span>(위상 30° 뒤짐) / 3상 전력 <span class='red'>P=√3 VL IL cosθ</span> (결선 방식에 관계없이 동일한 형태)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 부하의 Y↔Δ 변환</p>
+                    <p style="margin:0;">임피던스가 같은 평형부하를 상호 변환할 때 <span class='blue'>ZΔ = 3ZY</span> (Δ결선 임피던스는 Y결선의 3배). 회로 해석을 단순화하기 위해 서로 변환해서 계산하는 경우가 많다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 3상 전력의 측정(2전력계법)</p>
+                    <p style="margin:0;">단상 전력계 2대만으로 3상 전력을 측정하는 방법 — 3상 전체 유효전력 <span class='mint'>P = W1+W2</span> / 무효전력 <span class='mint'>Q=√3(W1-W2)</span> / 역률 <span class='mint'>cosθ = P/(√3×√(W1²+W2²-W1W2))</span> — 두 전력계 지시값 W1, W2로 3상량을 모두 구할 수 있다는 것이 핵심.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (3문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-7">점수: 0 / 100점 (정답 0 / 3문제)</span></div>
+                    <div id="unit-quiz-7" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u7-1" data-qid="u7-1">
+                    <button class="font-btn" onclick="resetAnswer('u7-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. Y결선에서 선간전압과 상전압의 관계는?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-1', this, '선간전압=√3×상전압')">선간전압=상전압</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-1', this, '선간전압=√3×상전압')">선간전압=√3×상전압</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-1', this, '선간전압=√3×상전압')">선간전압=3×상전압</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-1', this, '선간전압=√3×상전압')">선간전압=상전압/√3</button>
+                    </div>
+                    <div id="q-result-u7-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u7-1" class="note" style="display:none;">💡 해설: Y결선은 선간전압이 상전압의 √3배입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u7-2" data-qid="u7-2">
+                    <button class="font-btn" onclick="resetAnswer('u7-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. Δ결선을 Y결선으로 등가변환할 때 ZY = ZΔ/(   )에서 괄호 안은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u7-2" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u7-2', document.getElementById('input-u7-2'), ['3'])">확인</button>
+                    </div>
+                    <div id="q-result-u7-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u7-2" class="note" style="display:none;">💡 해설: ZY=ZΔ/3, 즉 ZΔ=3ZY 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u7-3" data-qid="u7-3">
+                    <button class="font-btn" onclick="resetAnswer('u7-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 2전력계법으로 측정한 두 전력계의 지시값이 W1, W2일 때 3상 전체 유효전력 P는?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-3', this, 'W1+W2')">W1×W2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-3', this, 'W1+W2')">W1+W2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-3', this, 'W1+W2')">W1-W2</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u7-3', this, 'W1+W2')">(W1+W2)/2</button>
+                    </div>
+                    <div id="q-result-u7-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u7-3" class="note" style="display:none;">💡 해설: 2전력계법의 3상 전체 유효전력은 P=W1+W2 입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-7')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-7')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-7" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(7)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-8" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">8 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-8" onchange="toggleComplete(8)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-8" onclick="toggleBookmark(8)">☆</button>
+                        </div>
+                    </div>
+                    <h2>8. 대칭좌표법</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 벡터 연산자 a와 위상 θ의 관계</p>
+                    <p style="margin:0;"><span class='red'>a = 1∠120°</span> (크기 1, 위상 120°인 벡터연산자). a²=1∠240°, a³=1∠360°=1, <span class='red'>1+a+a²=0</span> — 대칭좌표법 계산의 기본 도구.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 대칭좌표법</p>
+                    <p style="margin:0;">불평형 3상을 <span class='blue'>영상분(V0)·정상분(V1)·역상분(V2)</span> 세 가지 대칭 성분의 합으로 분해해서 해석하는 방법. V0=(1/3)(Va+Vb+Vc), V1=(1/3)(Va+aVb+a²Vc), V2=(1/3)(Va+a²Vb+aVc).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">각 성분의 의미</p>
+                    <p style="margin:0;"><span class='mint'>정상분</span>: 원래 회전방향과 같은 평형 3상분(전동기를 정상적으로 돌리는 성분) / <span class='mint'>역상분</span>: 반대 방향 회전을 유발(전동기 발열·역회전 원인) / <span class='mint'>영상분</span>: 세 상이 모두 같은 크기·위상(중성선/대지로 흐르는 성분, 지락사고와 관련)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 발전기를 포함하는 3상 회로의 고장계산</p>
+                    <p style="margin:0;">1선 지락, 선간 단락, 2선 지락 등의 사고가 발생하면 대칭좌표법으로 고장전류를 계산한다 — 발전기의 <span class='orange'>영상임피던스(Z0)·정상임피던스(Z1)·역상임피던스(Z2)</span>를 사고 종류에 맞게 조합(직렬/병렬)하여 고장점의 각 대칭분을 구한 뒤 실제 전류로 환산한다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-8">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-8" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u8-1" data-qid="u8-1">
+                    <button class="font-btn" onclick="resetAnswer('u8-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 연산자 a는 크기 1, 위상 몇 도의 벡터인가? (숫자만) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u8-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u8-1', document.getElementById('input-u8-1'), ['120'])">확인</button>
+                    </div>
+                    <div id="q-result-u8-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u8-1" class="note" style="display:none;">💡 해설: a=1∠120° 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u8-2" data-qid="u8-2">
+                    <button class="font-btn" onclick="resetAnswer('u8-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 불평형 3상 회로 해석에 사용하는 방법은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-2', this, '대칭좌표법')">중첩의 원리</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-2', this, '대칭좌표법')">대칭좌표법</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-2', this, '대칭좌표법')">테브난의 정리</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-2', this, '대칭좌표법')">라플라스 변환</button>
+                    </div>
+                    <div id="q-result-u8-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u8-2" class="note" style="display:none;">💡 해설: 불평형 3상은 대칭좌표법(영상·정상·역상분)으로 해석합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u8-3" data-qid="u8-3">
+                    <button class="font-btn" onclick="resetAnswer('u8-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 완전 평형 3상 회로에 존재하지 않는 성분은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-3', this, '역상분과 영상분')">정상분</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-3', this, '역상분과 영상분')">역상분과 영상분</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-3', this, '역상분과 영상분')">정상분과 역상분</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-3', this, '역상분과 영상분')">모두 존재</button>
+                    </div>
+                    <div id="q-result-u8-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u8-3" class="note" style="display:none;">💡 해설: 완전 평형 상태에서는 정상분만 존재합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u8-4" data-qid="u8-4">
+                    <button class="font-btn" onclick="resetAnswer('u8-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 1선 지락, 선간단락 같은 고장 계산에 주로 사용하는 해석법은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-4', this, '대칭좌표법')">대칭좌표법</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-4', this, '대칭좌표법')">라플라스 변환</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-4', this, '대칭좌표법')">푸리에 급수</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u8-4', this, '대칭좌표법')">4단자 파라미터</button>
+                    </div>
+                    <div id="q-result-u8-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u8-4" class="note" style="display:none;">💡 해설: 발전기 포함 3상 고장계산은 대칭좌표법으로 영상·정상·역상 임피던스를 이용합니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-8')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-8')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-8" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(8)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-9" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">9 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-9" onchange="toggleComplete(9)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-9" onclick="toggleBookmark(9)">☆</button>
+                        </div>
+                    </div>
+                    <h2>9. 비정현파 교류</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 비정현파 교류</p>
+                    <p style="margin:0;">사인파가 아닌 주기적 파형(구형파, 삼각파, 톱니파, 정류된 파형 등)을 비정현파라 한다. 실제 전자·전력회로의 신호는 완전한 정현파가 아닌 경우가 많아 이를 다루는 이론이 필요하다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 푸리에 급수</p>
+                    <p style="margin:0;">임의의 주기함수(비정현파)는 <span class='red'>직류분 + 기본파 + 각 고조파(2배,3배,4배...주파수)</span>의 합으로 표현할 수 있다 — f(t)=a0/2+Σ(an cos nωt + bn sin nωt). <span class='red'>반파대칭</span>이면 기수(홀수) 고조파만, <span class='red'>정현대칭</span>이면 sin항만, <span class='red'>여현대칭</span>이면 cos항만 남는 등 파형의 대칭성에 따라 급수가 단순해진다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 비정현파의 계산</p>
+                    <p style="margin:0;">비정현파의 실효값 <span class='blue'>V = √(V0²+V1²+V2²+...)</span> (직류분과 각 고조파 실효값의 제곱합의 제곱근) — 각 고조파는 서로 독립이므로 제곱합으로 합성한다. 왜형률(THD) = 전고조파 실효값/기본파 실효값.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. 비정현파의 직렬 임피던스 및 결선</p>
+                    <p style="margin:0;">인덕터·커패시터의 리액턴스는 주파수에 따라 달라지므로, n차 고조파에 대해서는 <span class='mint'>XLn=nωL</span>(n배로 커짐), <span class='mint'>XCn=XC/n</span>(1/n로 작아짐)이 된다. 따라서 각 고조파별로 개별 회로를 풀어 전류·전압을 구한 뒤, 서로 다른 주파수 성분이므로 <span class='mint'>중첩(제곱합의 제곱근으로 합성)</span>하여 최종 결과를 얻는다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-9">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-9" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u9-1" data-qid="u9-1">
+                    <button class="font-btn" onclick="resetAnswer('u9-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 비정현파를 직류분+기본파+고조파의 합으로 나타내는 방법은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-1', this, '푸리에 급수')">라플라스 변환</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-1', this, '푸리에 급수')">푸리에 급수</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-1', this, '푸리에 급수')">테일러 급수</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-1', this, '푸리에 급수')">복소수 표현</button>
+                    </div>
+                    <div id="q-result-u9-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u9-1" class="note" style="display:none;">💡 해설: 비정현파는 푸리에 급수로 표현합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u9-2" data-qid="u9-2">
+                    <button class="font-btn" onclick="resetAnswer('u9-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 반파대칭인 파형에는 어떤 고조파가 존재하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-2', this, '기수(홀수) 고조파')">우수(짝수) 고조파</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-2', this, '기수(홀수) 고조파')">기수(홀수) 고조파</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-2', this, '기수(홀수) 고조파')">직류분만</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-2', this, '기수(홀수) 고조파')">모든 고조파</button>
+                    </div>
+                    <div id="q-result-u9-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u9-2" class="note" style="display:none;">💡 해설: 반파대칭 파형에는 기수(홀수)차 고조파만 존재합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u9-3" data-qid="u9-3">
+                    <button class="font-btn" onclick="resetAnswer('u9-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 비정현파의 실효값 V=√(V0²+V1²+V2²+...)에서 V0는 무엇을 의미하는가? (한글 2글자) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u9-3" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u9-3', document.getElementById('input-u9-3'), ['직류분'])">확인</button>
+                    </div>
+                    <div id="q-result-u9-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u9-3" class="note" style="display:none;">💡 해설: V0는 직류분(평균값)을 의미합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u9-4" data-qid="u9-4">
+                    <button class="font-btn" onclick="resetAnswer('u9-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 기본파 각속도가 ω일 때 3고조파의 유도 리액턴스는 기본파의 몇 배인가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-4', this, '3배')">1/3배</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-4', this, '3배')">3배</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-4', this, '3배')">9배</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u9-4', this, '3배')">변화 없음</button>
+                    </div>
+                    <div id="q-result-u9-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u9-4" class="note" style="display:none;">💡 해설: n고조파의 유도 리액턴스 XLn=nωL 이므로 3고조파는 기본파의 3배입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-9')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-9')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-9" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(9)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-10" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">10 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-10" onchange="toggleComplete(10)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-10" onclick="toggleBookmark(10)">☆</button>
+                        </div>
+                    </div>
+                    <h2>10. 단자망</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 2단자망 회로의 구성</p>
+                    <p style="margin:0;">입력과 출력이 한 쌍의 단자로 이루어진 회로 — 단자에서 바라본 임피던스를 <span class='red'>구동점 임피던스</span> Z(s)라 하며, 회로 내부 구성과 무관하게 단자에서의 전압-전류 관계만으로 특성을 표현할 수 있다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 정저항 회로와 역회로</p>
+                    <p style="margin:0;">주파수에 관계없이 구동점 임피던스가 항상 순저항(실수)으로만 나타나는 특수한 회로 — 정저항 조건: <span class='blue'>R² = Z1×Z2</span> (두 임피던스의 곱이 저항의 제곱과 같아야 함). 역회로는 어떤 임피던스와 곱했을 때 항상 상수(R²)가 되는 한 쌍의 회로를 의미한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 4단자망의 기본식</p>
+                    <p style="margin:0;">입력측(V1,I1)과 출력측(V2,I2) 사이의 관계를 <span class='mint'>[V1;I1] = [A B; C D][V2;I2]</span> 형태로 나타낸 것이 ABCD(전송) 파라미터. 가역(수동)회로 조건: <span class='mint'>AD-BC=1</span>, 좌우 대�칭 회로면 A=D.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. Z파라미터와 Y파라미터</p>
+                    <p style="margin:0;"><span class='orange'>Z파라미터</span>: 출력단자를 <span class='orange'>개방</span>한 상태에서 정의하는 임피던스 파라미터(V1=Z11I1+Z12I2 등) / <span class='orange'>Y파라미터</span>: 출력단자를 <span class='orange'>단락</span>한 상태에서 정의하는 어드미턴스 파라미터. 트랜지스터 등가회로에는 흔히 H(하이브리드) 파라미터도 사용된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">5. 영상 파라미터</p>
+                    <p style="margin:0;">회로의 양쪽 단자에서 바라본 임피던스가 서로 정합(matching)되도록 정의하는 <span class='red'>영상임피던스(Zo1, Zo2)</span>와 신호 전달 특성을 나타내는 영상전달정수 개념 — 통신선로·필터 설계에서 반사 없는 신호 전달을 위해 사용된다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">6. 분포정수 회로</p>
+                    <p style="margin:0;">송전선처럼 긴 선로에서는 저항·인덕턴스·정전용량·누설컨덕턴스가 선로를 따라 <span class='blue'>고르게 분포</span>되어 있다고 본다. 특성임피던스 <span class='blue'>Z0=√(Z/Y)</span>, 무손실선로(R=0,G=0)인 경우 <span class='blue'>Z0=√(L/C)</span> — 선로의 길이나 부하와 무관한 고유값이다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-10">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-10" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u10-1" data-qid="u10-1">
+                    <button class="font-btn" onclick="resetAnswer('u10-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 주파수에 관계없이 항상 순저항으로 보이는 회로를 무엇이라 하는가? (한글 4글자) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u10-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u10-1', document.getElementById('input-u10-1'), ['정저항회로', '정저항 회로'])">확인</button>
+                    </div>
+                    <div id="q-result-u10-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u10-1" class="note" style="display:none;">💡 해설: 정저항회로는 구동점 임피던스가 항상 순저항인 회로입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u10-2" data-qid="u10-2">
+                    <button class="font-btn" onclick="resetAnswer('u10-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 가역(수동) 회로의 ABCD 파라미터가 만족하는 조건은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-2', this, 'AD-BC=1')">AD-BC=0</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-2', this, 'AD-BC=1')">AD-BC=1</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-2', this, 'AD-BC=1')">AD+BC=1</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-2', this, 'AD-BC=1')">AD/BC=1</button>
+                    </div>
+                    <div id="q-result-u10-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u10-2" class="note" style="display:none;">💡 해설: 가역회로는 AD-BC=1을 만족합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u10-3" data-qid="u10-3">
+                    <button class="font-btn" onclick="resetAnswer('u10-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. Z파라미터는 출력단자를 어떤 상태로 두고 정의하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-3', this, '개방')">단락</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-3', this, '개방')">개방</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-3', this, '개방')">접지</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u10-3', this, '개방')">무관</button>
+                    </div>
+                    <div id="q-result-u10-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u10-3" class="note" style="display:none;">💡 해설: Z(임피던스) 파라미터는 단자를 개방한 상태에서 정의됩니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u10-4" data-qid="u10-4">
+                    <button class="font-btn" onclick="resetAnswer('u10-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 무손실 전송선로의 특성임피던스 Z0 = √(   )에서 괄호 안은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u10-4" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u10-4', document.getElementById('input-u10-4'), ['L/C'])">확인</button>
+                    </div>
+                    <div id="q-result-u10-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u10-4" class="note" style="display:none;">💡 해설: 무손실선로의 특성임피던스는 Z0=√(L/C) 입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-10')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-10')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-10" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(10)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-11" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">11 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-11" onchange="toggleComplete(11)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-11" onclick="toggleBookmark(11)">☆</button>
+                        </div>
+                    </div>
+                    <h2>11. 라플라스 변환</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 기본함수의 라플라스 변환</p>
+                    <p style="margin:0;">단위계단 u(t)→<span class='red'>1/s</span>, 단위임펄스 δ(t)→1, e^(-at)→<span class='red'>1/(s+a)</span>, sin(ωt)→ω/(s²+ω²), cos(ωt)→s/(s²+ω²), t→1/s²</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 라플라스 변환의 재정리(주요 성질)</p>
+                    <p style="margin:0;">선형성: L[af(t)+bg(t)]=aF(s)+bG(s) / 미분정리: L[f'(t)]=<span class='blue'>sF(s)-f(0)</span> / 적분정리: L[∫f(t)dt]=F(s)/s / 시간추이정리: L[f(t-a)u(t-a)]=e^(-as)F(s) / 최종값정리: lim(t→∞)f(t)=lim(s→0)sF(s) / 초기값정리: lim(t→0)f(t)=lim(s→∞)sF(s)</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 역라플라스 변환</p>
+                    <p style="margin:0;">F(s)가 분수 형태(유리함수)일 때 <span class='mint'>부분분수로 분해</span>한 뒤 각 항을 표준 변환쌍(1/s, 1/(s+a) 등)과 대응시켜 시간함수로 되돌린다. 회로 미분방정식을 s영역에서 대수적으로 푼 뒤, 마지막에 이 과정을 거쳐 실제 시간에 따른 응답을 얻는다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-11">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-11" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u11-1" data-qid="u11-1">
+                    <button class="font-btn" onclick="resetAnswer('u11-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 단위계단함수 u(t)의 라플라스 변환은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-1', this, '1/s')">1/s</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-1', this, '1/s')">1/s²</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-1', this, '1/s')">s</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-1', this, '1/s')">1</button>
+                    </div>
+                    <div id="q-result-u11-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u11-1" class="note" style="display:none;">💡 해설: u(t)의 라플라스 변환은 1/s 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u11-2" data-qid="u11-2">
+                    <button class="font-btn" onclick="resetAnswer('u11-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. e^(-at)의 라플라스 변환은 1/(s+ㅁ) 형태이다. ㅁ은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u11-2" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u11-2', document.getElementById('input-u11-2'), ['a'])">확인</button>
+                    </div>
+                    <div id="q-result-u11-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u11-2" class="note" style="display:none;">💡 해설: e^(-at)의 라플라스 변환은 1/(s+a) 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u11-3" data-qid="u11-3">
+                    <button class="font-btn" onclick="resetAnswer('u11-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 라플라스 변환의 미분정리 L[f&#x27;(t)]는?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-3', this, 'sF(s)-f(0)')">sF(s)-f(0)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-3', this, 'sF(s)-f(0)')">F(s)/s</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-3', this, 'sF(s)-f(0)')">sF(s)</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-3', this, 'sF(s)-f(0)')">F(s)-f(0)</button>
+                    </div>
+                    <div id="q-result-u11-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u11-3" class="note" style="display:none;">💡 해설: 미분정리는 L[f&#x27;(t)] = sF(s) - f(0) 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u11-4" data-qid="u11-4">
+                    <button class="font-btn" onclick="resetAnswer('u11-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 역라플라스 변환을 구할 때 흔히 사용하는 방법은?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-4', this, '부분분수 분해')">부분분수 분해</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-4', this, '부분분수 분해')">적분</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-4', this, '부분분수 분해')">미분</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u11-4', this, '부분분수 분해')">행렬곱</button>
+                    </div>
+                    <div id="q-result-u11-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u11-4" class="note" style="display:none;">💡 해설: F(s)를 부분분수로 분해해 표준 변환쌍과 매칭시켜 역변환합니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-11')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-11')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-11" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(11)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-12" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">12 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-12" onchange="toggleComplete(12)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-12" onclick="toggleBookmark(12)">☆</button>
+                        </div>
+                    </div>
+                    <h2>12. 과도현상</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 과도현상</p>
+                    <p style="margin:0;">회로의 상태(스위치 On/Off 등)가 바뀐 직후부터, 새로운 정상상태(안정상태)에 도달하기까지의 <span class='red'>일시적인 변화 과정</span>. 인덕터와 커패시터가 에너지를 즉시 바꿀 수 없기 때문에 발생한다(인덕터 전류·커패시터 전압은 순간적으로 변하지 않는다).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 직류 R-L 직렬회로</p>
+                    <p style="margin:0;">스위치 On 시 전류 <span class='blue'>i(t) = (E/R)(1-e^(-Rt/L))</span> — 처음엔 0에서 시작해 지수적으로 증가하여 최종값 E/R에 도달. 시정수 <span class='blue'>τ = L/R</span>[s]로, τ가 클수록 정상상태에 도달하는 데 오래 걸린다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">3. 직류 R-C 직렬회로</p>
+                    <p style="margin:0;">스위치 On 시(충전) 전압 <span class='mint'>vc(t) = E(1-e^(-t/RC))</span>, 전류 i(t)=(E/R)e^(-t/RC) — 커패시터 전압은 0에서 시작해 E로 수렴, 전류는 초기 최대값에서 지수적으로 감소. 시정수 <span class='mint'>τ = RC</span>[s].</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">시정수의 의미</p>
+                    <p style="margin:0;">시정수 τ가 지나면 응답은 최종값(또는 초기값)의 약 <span class='orange'>63.2%</span>만큼 변화하고, 5τ 정도가 지나면 사실상 정상상태에 도달했다고 본다(99% 이상).</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">4. 직류 R-L-C 직렬회로</p>
+                    <p style="margin:0;">저항 R의 크기에 따라 감쇠 양상이 달라진다 — <span class='red'>과제동</span>(R이 커서 진동 없이 서서히 정상상태 도달), <span class='red'>임계제동</span>(진동 직전의 경계, 가장 빠르게 진동 없이 도달), <span class='red'>부족제동</span>(R이 작아 진동하며 감쇠). 이는 2차 미분방정식의 특성근이 실근(과제동), 중근(임계제동), 복소근(부족제동)인지에 대응한다.</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-12">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-12" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u12-1" data-qid="u12-1">
+                    <button class="font-btn" onclick="resetAnswer('u12-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. RL 직렬회로의 시정수 τ = ?(L과 R로 표현) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u12-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u12-1', document.getElementById('input-u12-1'), ['L/R'])">확인</button>
+                    </div>
+                    <div id="q-result-u12-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u12-1" class="note" style="display:none;">💡 해설: RL 직렬회로의 시정수는 τ=L/R 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u12-2" data-qid="u12-2">
+                    <button class="font-btn" onclick="resetAnswer('u12-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. RC 직렬회로의 시정수 τ = ?(R과 C로 표현) <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u12-2" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u12-2', document.getElementById('input-u12-2'), ['RC'])">확인</button>
+                    </div>
+                    <div id="q-result-u12-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u12-2" class="note" style="display:none;">💡 해설: RC 직렬회로의 시정수는 τ=RC 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u12-3" data-qid="u12-3">
+                    <button class="font-btn" onclick="resetAnswer('u12-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. RL 직렬회로에서 시간이 시정수(τ)만큼 지났을 때 전류는 최종값의 약 몇 %에 도달하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-3', this, '63%')">37%</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-3', this, '63%')">50%</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-3', this, '63%')">63%</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-3', this, '63%')">100%</button>
+                    </div>
+                    <div id="q-result-u12-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u12-3" class="note" style="display:none;">💡 해설: t=τ일 때 최종값의 약 63%(1-e⁻¹)에 도달합니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u12-4" data-qid="u12-4">
+                    <button class="font-btn" onclick="resetAnswer('u12-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. RLC 직렬회로에서 저항이 매우 커서 진동 없이 서서히 정상상태에 도달하는 경우를 무엇이라 하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-4', this, '과제동')">부족제동</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-4', this, '과제동')">임계제동</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-4', this, '과제동')">과제동</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u12-4', this, '과제동')">무제동</button>
+                    </div>
+                    <div id="q-result-u12-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u12-4" class="note" style="display:none;">💡 해설: 과제동은 저항이 커서 진동 없이 느리게 정상상태에 도달하는 경우입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-12')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-12')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-12" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(12)"></textarea>
+                    </div>
+                </div>
+
+                <div id="sub-page-13" class="sub-page" style="display:none;">
+                    <div class="sub-page-header">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div class="page-indicator">13 / 13 PAGE</div>
+                            <button class="font-btn" onclick="showSubMenu()" style="font-size:0.75em; padding:4px 8px;">📋 단원 목록</button>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <label class="complete-check-label"><input type="checkbox" id="check-page-13" onchange="toggleComplete(13)"> 학습 완료</label>
+                            <button class="bookmark-btn" id="star-btn-13" onclick="toggleBookmark(13)">☆</button>
+                        </div>
+                    </div>
+                    <h2>13. 전달함수</h2>
+
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">1. 전달함수</p>
+                    <p style="margin:0;">모든 초기값을 0으로 했을 때, <span class='red'>출력의 라플라스변환 / 입력의 라플라스변환</span> → G(s)=C(s)/R(s). 선형 시불변계(LTI)에서만 정의되며, 회로/시스템의 입출력 특성을 s영역에서 하나의 식으로 표현한다.</p>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">2. 전달함수의 종류</p>
+                    <p style="margin:0;"><span class='blue'>비례요소</span>: G(s)=K (입력에 상수배해서 그대로 출력) / <span class='blue'>미분요소</span>: G(s)=Ks / <span class='blue'>적분요소</span>: G(s)=K/s (입력을 누적) / <span class='blue'>1차 지연요소</span>: G(s)=K/(1+Ts) (RC 저역통과 필터처럼 서서히 반응) / <span class='blue'>2차 지연요소</span>: G(s)=K/(T²s²+2ζTs+1) (RLC 회로처럼 진동 가능한 응답)</p>
+                </div>
+
+                    <div class="quiz-sec-header">
+                        <span class="quiz-sec-title">✏️ 단원 확인문제 (4문제)</span>
+                    </div>
+                    <div class="score-board"><span id="score-unit-quiz-13">점수: 0 / 100점 (정답 0 / 4문제)</span></div>
+                    <div id="unit-quiz-13" data-scoreboard="true">
+                <div class="box quiz-box" id="box-u13-1" data-qid="u13-1">
+                    <button class="font-btn" onclick="resetAnswer('u13-1')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q1. 전달함수 G(s) = C(s)/____ 에서 빈칸은? <span class="blue_nb" style="font-size:0.8em;">(단답형)</span></p>
+                    <div style="display:flex; gap:6px; margin:12px 0;">
+                        <input type="text" id="input-u13-1" class="mini-text-input" placeholder="정답 입력" style="max-width:180px;">
+                        <button class="font-btn" onclick="checkAnswerByInput('u13-1', document.getElementById('input-u13-1'), ['R(s)'])">확인</button>
+                    </div>
+                    <div id="q-result-u13-1" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u13-1" class="note" style="display:none;">💡 해설: 전달함수는 G(s)=C(s)/R(s) 입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u13-2" data-qid="u13-2">
+                    <button class="font-btn" onclick="resetAnswer('u13-2')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q2. 전달함수는 어떤 시스템에서 정의되는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-2', this, '선형 시불변계')">비선형 시변계</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-2', this, '선형 시불변계')">선형 시불변계</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-2', this, '선형 시불변계')">임의의 시스템</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-2', this, '선형 시불변계')">디지털 시스템만</button>
+                    </div>
+                    <div id="q-result-u13-2" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u13-2" class="note" style="display:none;">💡 해설: 전달함수는 선형 시불변(LTI) 시스템에서만 정의됩니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u13-3" data-qid="u13-3">
+                    <button class="font-btn" onclick="resetAnswer('u13-3')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q3. 전달함수가 G(s)=K/s인 요소를 무엇이라 하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-3', this, '적분요소')">비례요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-3', this, '적분요소')">미분요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-3', this, '적분요소')">적분요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-3', this, '적분요소')">1차 지연요소</button>
+                    </div>
+                    <div id="q-result-u13-3" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u13-3" class="note" style="display:none;">💡 해설: G(s)=K/s 형태는 적분요소입니다.</div>
+                </div>
+                <div class="box quiz-box" id="box-u13-4" data-qid="u13-4">
+                    <button class="font-btn" onclick="resetAnswer('u13-4')" style="float:right; font-size:0.75em; padding:4px 8px;">🔄 초기화</button>
+                    <p class="quiz-q-title" style="font-weight:bold; margin-top:0;">Q4. 전달함수가 G(s)=K/(1+Ts)인 요소를 무엇이라 하는가?</p>
+                    <div class="quiz-opt-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin:12px 0;">
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-4', this, '1차 지연요소')">비례요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-4', this, '1차 지연요소')">미분요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-4', this, '1차 지연요소')">1차 지연요소</button>
+<button class="font-btn opt-btn" onclick="checkAnswerByText('u13-4', this, '1차 지연요소')">2차 지연요소</button>
+                    </div>
+                    <div id="q-result-u13-4" style="margin-top:10px; font-weight:bold; display:none;"></div>
+                    <div id="q-expl-u13-4" class="note" style="display:none;">💡 해설: G(s)=K/(1+Ts) 형태는 1차 지연요소입니다.</div>
+                </div>
+                    </div>
+                    <div style="text-align:center; margin:10px 0 20px 0; display:flex; gap:6px; justify-content:center; flex-wrap:wrap;">
+                        <button class="font-btn" onclick="shuffleSection('unit-quiz-13')" style="background-color:#8b5cf6; color:#fff;">🔀 순서 섞기</button>
+                        <button class="font-btn" onclick="resetAllInContainer('unit-quiz-13')" style="background-color:#ef4444; color:#fff;">🔄 전체 초기화</button>
+                    </div>
+
+                    <div class="page-memo-section">
+                        <p class="page-memo-title">📝 나만의 메모</p>
+                        <textarea id="memo-input-13" class="page-memo-textarea" placeholder="이 단원에서 헷갈리는 부분을 적어보세요." onblur="savePageMemo(13)"></textarea>
+                    </div>
+                </div>
+
+            <div id="page-nav-bar" class="page-nav-bar" style="display:none;">
+                <button id="btn-prev" class="page-nav-btn" onclick="prevSubPage()">◀ 이전</button>
+                <button class="page-nav-btn main-btn" onclick="showSubMenu()">📋 단원 목록</button>
+                <button id="btn-next" class="page-nav-btn" onclick="nextSubPage()">다음 ▶</button>
+            </div>
+        </div>
+
+        <!-- 랜덤 모의고사 탭 -->
+        <div id="tab-exam" class="tab-content">
+            <h1>전기기사 회로이론 - <br>🎲 랜덤 모의고사</h1>
+            <div id="exam-select" class="box" style="text-align:center;">
+                <p style="font-weight:700; margin-top:0;">몇 문제를 랜덤으로 뽑을까요?</p>
+                <p style="font-size:0.82em; color:var(--text-sub); margin-bottom:16px;">전체 55문제(1~13단원) 중에서 매번 다른 조합으로 출제돼요.</p>
+                <div style="display:flex; gap:8px; justify-content:center; flex-wrap:wrap;">
+                    <button class="font-btn" onclick="startRandomExam(15)" style="padding:10px 18px;">15문제</button>
+                    <button class="font-btn" onclick="startRandomExam(30)" style="padding:10px 18px; background-color: var(--primary); color:#ffffff;">30문제</button>
+                    <button class="font-btn" onclick="startRandomExam(55)" style="padding:10px 18px;">55문제(전체)</button>
+                </div>
+            </div>
+
+            <div id="exam-quiz-area" style="display:none;">
+                <div style="display:flex; gap:4px; flex-wrap:wrap; margin-bottom:10px;">
+                    <button class="font-btn" onclick="shuffleSection('exam-questions-wrap')" style="font-size: 0.8em; background-color: #8b5cf6; color: #fff;">🔀 순서 섞기</button>
+                    <button class="font-btn" onclick="resetAllInContainer('exam-questions-wrap')" style="font-size: 0.8em; background-color: #ef4444; color: #ffffff;">🔄 전체 초기화</button>
+                    <button class="font-btn" onclick="backToRandomSelect()" style="font-size: 0.8em;">🎲 다시 뽑기</button>
+                </div>
+                <div class="score-board"><span id="score-exam-questions-wrap">점수: 0 / 100점 (정답 0문제)</span></div>
+                <div id="exam-questions-wrap" data-scoreboard="true"></div>
+                <div style="text-align:center; margin-top:20px;"><button class="page-nav-btn main-btn" onclick="openTab(null, 'tab-study')">📘 단원학습으로</button></div>
+            </div>
+        </div>
+
+        <!-- 오답노트 탭 -->
+        <div id="tab-wrong" class="tab-content">
+            <h1>전기기사 회로이론 - <br>📕 나만의 자동 오답노트</h1>
+            <div class="box" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-top: 6px; padding: 12px 14px;">
+                <div style="font-size: 0.9em; color: var(--text-color);">
+                    💡 단원별 확인문제, 랜덤모의고사에서 <b>틀린 문제가 자동으로 이곳에 기록</b>됩니다.
+                </div>
+                <button class="font-btn" onclick="clearAllWrongNotes()" style="font-size: 0.8em; background-color: #ef4444; color: #ffffff; padding: 5px 10px;">🗑️ 오답노트 전체 비우기</button>
+            </div>
+            <div id="wrong-unit-summary"></div>
+            <div id="wrong-notes-list"></div>
+        </div>
+    </div>
+
+    <button id="top-btn" class="top-btn" onclick="scrollToTop()" style="display:none;">▲</button>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
