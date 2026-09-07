@@ -1,15 +1,15 @@
 var currentSubPage = 0;
 var totalSubPages = 22;
-var bookmarks = JSON.parse(localStorage.getItem('user_bookmarks') || '[]');
-var completes = JSON.parse(localStorage.getItem('user_completes') || '[]');
-var currentFontSize = parseInt(localStorage.getItem('user_font_size') || '14', 10);
-var memorizeTimerSec = parseInt(localStorage.getItem('user_timer_sec') || '3', 10);
+var bookmarks = JSON.parse(localStorage.getItem('electric_user_bookmarks') || '[]');
+var completes = JSON.parse(localStorage.getItem('electric_user_completes') || '[]');
+var currentFontSize = parseInt(localStorage.getItem('electric_user_font_size') || '14', 10);
+var memorizeTimerSec = parseInt(localStorage.getItem('electric_user_timer_sec') || '3', 10);
 
 var quizAnswerState = {};
 var filterWrongModes = {};
 var isChosungMode = false;
 var originalElementsData = [];
-var wrongNotes = JSON.parse(localStorage.getItem('user_wrong_notes') || '{}');
+var wrongNotes = JSON.parse(localStorage.getItem('electric_user_wrong_notes') || '{}');
 var lastSearchQuery = "";
 
 var studyQuotes = [
@@ -51,15 +51,15 @@ function toggleTopPanel() {
     var isCollapsed = content.classList.toggle("collapsed");
     if (isCollapsed) {
         btnText.innerText = "▼ 메뉴 펼치기";
-        localStorage.setItem("user_top_panel_collapsed", "true");
+        localStorage.setItem("electric_electric_user_top_panel_collapsed", "true");
     } else {
         btnText.innerText = "▲ 메뉴 접기";
-        localStorage.setItem("user_top_panel_collapsed", "false");
+        localStorage.setItem("electric_user_top_panel_collapsed", "false");
     }
 }
 
 function calculateDDay() {
-    var saved = localStorage.getItem("user_exam_date");
+    var saved = localStorage.getItem("electric_user_exam_date");
     var badgeEl = document.getElementById("exam-dday-badge");
     if (!badgeEl) return;
     if (!saved) {
@@ -80,23 +80,23 @@ function calculateDDay() {
 function setExamDate() {
     var input = document.getElementById("exam-date-input");
     if (!input || !input.value) return;
-    localStorage.setItem("user_exam_date", input.value);
+    localStorage.setItem("electric_electric_user_exam_date", input.value);
     calculateDDay();
 }
 
 function renderHourlyQuote() {
     var now = new Date();
     var currentHourKey = now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate() + "-" + now.getHours();
-    var savedHourKey = localStorage.getItem("last_quote_hour_key");
-    var savedQuoteIndex = localStorage.getItem("current_quote_index");
+    var savedHourKey = localStorage.getItem("electric_last_quote_hour_key");
+    var savedQuoteIndex = localStorage.getItem("electric_current_quote_index");
     var chosenIndex = 0;
 
     if (savedHourKey === currentHourKey && savedQuoteIndex !== null) {
         chosenIndex = parseInt(savedQuoteIndex, 10);
     } else {
         chosenIndex = Math.floor(Math.random() * studyQuotes.length);
-        localStorage.setItem("last_quote_hour_key", currentHourKey);
-        localStorage.setItem("current_quote_index", chosenIndex);
+        localStorage.setItem("electric_electric_last_quote_hour_key", currentHourKey);
+        localStorage.setItem("electric_current_quote_index", chosenIndex);
     }
     var q = studyQuotes[chosenIndex] || studyQuotes[0];
     var box = document.getElementById("daily-quote-box");
@@ -105,7 +105,7 @@ function renderHourlyQuote() {
 
 function applyFontSize() {
     document.documentElement.style.setProperty('--base-font-size', currentFontSize + 'px');
-    localStorage.setItem('user_font_size', currentFontSize);
+    localStorage.setItem('electric_user_font_size', currentFontSize);
 }
 function changeFontSize(delta) {
     currentFontSize += delta;
@@ -118,7 +118,7 @@ function resetFontSize() { currentFontSize = 14; applyFontSize(); }
 function toggleDarkMode() {
     document.body.classList.toggle('dark-mode');
     var isDark = document.body.classList.contains('dark-mode');
-    localStorage.setItem('user_dark_mode', isDark);
+    localStorage.setItem('electric_user_dark_mode', isDark);
     document.getElementById('darkmode-toggle-btn').innerText = isDark ? "☀️ 주간" : "🌙 야간";
 }
 
@@ -168,7 +168,7 @@ function toggleChosungMode() {
 
 function setTimerSec(sec) {
     memorizeTimerSec = sec;
-    localStorage.setItem('user_timer_sec', sec);
+    localStorage.setItem('electric_user_timer_sec', sec);
     updateTimerUI();
 }
 function updateTimerUI() {
@@ -199,13 +199,13 @@ function setupMemorizeClickEvents() {
 /* ===================== 메모 / 백업 ===================== */
 function savePageMemo(pageNum) {
     var memoText = document.getElementById("memo-input-" + pageNum).value;
-    localStorage.setItem("user_memo_page_" + pageNum, memoText);
+    localStorage.setItem("electric_user_memo_page_" + pageNum, memoText);
 }
 
 async function exportUserData() {
-    var backupData = { bookmarks: bookmarks, completes: completes, wrongNotes: wrongNotes, memos: {}, examDate: localStorage.getItem("user_exam_date") || "" };
+    var backupData = { bookmarks: bookmarks, completes: completes, wrongNotes: wrongNotes, memos: {}, examDate: localStorage.getItem("electric_user_exam_date") || "" };
     for (var i = 1; i <= totalSubPages; i++) {
-        var memo = localStorage.getItem("user_memo_page_" + i);
+        var memo = localStorage.getItem("electric_user_memo_page_" + i);
         if (memo) backupData.memos[i] = memo;
     }
     var now = new Date();
@@ -244,12 +244,12 @@ function importUserData(event) {
     reader.onload = function (e) {
         try {
             var data = JSON.parse(e.target.result);
-            if (data.bookmarks) localStorage.setItem('user_bookmarks', JSON.stringify(data.bookmarks));
-            if (data.completes) localStorage.setItem('user_completes', JSON.stringify(data.completes));
-            if (data.wrongNotes) localStorage.setItem('user_wrong_notes', JSON.stringify(data.wrongNotes));
-            if (data.examDate) localStorage.setItem('user_exam_date', data.examDate);
+            if (data.bookmarks) localStorage.setItem('electric_user_bookmarks', JSON.stringify(data.bookmarks));
+            if (data.completes) localStorage.setItem('electric_user_completes', JSON.stringify(data.completes));
+            if (data.wrongNotes) localStorage.setItem('electric_user_wrong_notes', JSON.stringify(data.wrongNotes));
+            if (data.examDate) localStorage.setItem('electric_user_exam_date', data.examDate);
             if (data.memos) {
-                for (var key in data.memos) localStorage.setItem("user_memo_page_" + key, data.memos[key]);
+                for (var key in data.memos) localStorage.setItem("electric_user_memo_page_" + key, data.memos[key]);
             }
             alert("✅ 백업 복원이 완료되었습니다. 새로고침합니다.");
             location.reload();
@@ -276,7 +276,7 @@ function toggleComplete(pageNum) {
     var chk = document.getElementById("check-page-" + pageNum);
     if (chk.checked) { if (!completes.includes(pageNum)) completes.push(pageNum); }
     else { var idx = completes.indexOf(pageNum); if (idx > -1) completes.splice(idx, 1); }
-    localStorage.setItem('user_completes', JSON.stringify(completes));
+    localStorage.setItem('electric_user_completes', JSON.stringify(completes));
     updateProgress();
 }
 
@@ -284,7 +284,7 @@ function toggleBookmark(pageNum) {
     var index = bookmarks.indexOf(pageNum);
     if (index > -1) bookmarks.splice(index, 1);
     else bookmarks.push(pageNum);
-    localStorage.setItem('user_bookmarks', JSON.stringify(bookmarks));
+    localStorage.setItem('electric_user_bookmarks', JSON.stringify(bookmarks));
     updateBookmarkUI();
 }
 
@@ -335,7 +335,7 @@ function toggleTabDropdown() {
 
 function toggleTabMenuStyle() {
     var isFlat = document.body.classList.toggle('flat-tab-menu');
-    localStorage.setItem('user_tab_menu_flat', isFlat);
+    localStorage.setItem('electric_user_tab_menu_flat', isFlat);
     var btn = document.getElementById('tab-menu-style-btn');
     btn.innerText = isFlat ? "☰ 탭 메뉴: 일자형" : "▾ 탭 메뉴: 드롭다운형";
 }
@@ -418,7 +418,7 @@ function checkAnswerByText(qId, clickedBtn, correctText) {
         if (resultEl) resultEl.innerHTML = "<span style='color:" + (isDark ? "#4ade80" : "#16a34a") + ";'>정답입니다! 🎉</span>";
         clickedBtn.style.backgroundColor = isDark ? "#064e3b" : "#dcfce7";
         clickedBtn.style.color = isDark ? "#86efac" : "#166534";
-        if (wrongNotes[qId]) { delete wrongNotes[qId]; localStorage.setItem('user_wrong_notes', JSON.stringify(wrongNotes)); renderWrongNotes(); }
+        if (wrongNotes[qId]) { delete wrongNotes[qId]; localStorage.setItem('electric_user_wrong_notes', JSON.stringify(wrongNotes)); renderWrongNotes(); }
     } else {
         if (resultEl) resultEl.innerHTML = "<span style='color:" + (isDark ? "#f87171" : "#dc2626") + ";'>오답입니다! (정답: " + correctText + ")</span>";
         clickedBtn.style.backgroundColor = isDark ? "#7f1d1d" : "#fee2e2";
@@ -426,7 +426,7 @@ function checkAnswerByText(qId, clickedBtn, correctText) {
 
         var unit = unitOfQid(qId);
         wrongNotes[qId] = { id: qId, title: qTitle, correct: correctText.trim(), wrongChoice: selectedText, expl: qExpl, type: unit ? unitTitles[unit] : "랜덤모의고사" };
-        localStorage.setItem('user_wrong_notes', JSON.stringify(wrongNotes));
+        localStorage.setItem('electric_user_wrong_notes', JSON.stringify(wrongNotes));
         renderWrongNotes();
     }
     updateUnitScore(qId);
@@ -452,12 +452,12 @@ function checkAnswerByInput(qId, inputEl, correctAnswers) {
 
     if (isCorrect) {
         if (resultEl) resultEl.innerHTML = "<span style='color:" + (isDark ? "#4ade80" : "#16a34a") + ";'>정답입니다! 🎉</span>";
-        if (wrongNotes[qId]) { delete wrongNotes[qId]; localStorage.setItem('user_wrong_notes', JSON.stringify(wrongNotes)); renderWrongNotes(); }
+        if (wrongNotes[qId]) { delete wrongNotes[qId]; localStorage.setItem('electric_user_wrong_notes', JSON.stringify(wrongNotes)); renderWrongNotes(); }
     } else {
         if (resultEl) resultEl.innerHTML = "<span style='color:" + (isDark ? "#f87171" : "#dc2626") + ";'>오답입니다! (정답: " + correctText + ")</span>";
         var unit = unitOfQid(qId);
         wrongNotes[qId] = { id: qId, title: qTitle, correct: correctText, wrongChoice: inputEl.value.trim() || "(빈칸)", expl: qExpl, type: unit ? unitTitles[unit] : "랜덤모의고사" };
-        localStorage.setItem('user_wrong_notes', JSON.stringify(wrongNotes));
+        localStorage.setItem('electric_user_wrong_notes', JSON.stringify(wrongNotes));
         renderWrongNotes();
     }
     updateUnitScore(qId);
@@ -624,7 +624,7 @@ function renderWrongNotes() {
 function clearAllWrongNotes() {
     if (!confirm("오답노트를 전체 비우시겠어요? 되돌릴 수 없습니다.")) return;
     wrongNotes = {};
-    localStorage.setItem('user_wrong_notes', '{}');
+    localStorage.setItem('electric_user_wrong_notes', '{}');
     renderWrongNotes();
 }
 
@@ -720,22 +720,22 @@ function setupMiniEnterKeys() {
 }
 
 function loadSavedStates() {
-    if (localStorage.getItem('user_dark_mode') === 'true') {
+    if (localStorage.getItem('electric_user_dark_mode') === 'true') {
         document.body.classList.add('dark-mode');
         document.getElementById('darkmode-toggle-btn').innerText = "☀️ 주간";
     }
-    if (localStorage.getItem('user_top_panel_collapsed') === 'false') {
+    if (localStorage.getItem('electric_user_top_panel_collapsed') === 'false') {
         var panelContent = document.getElementById('collapsible-control-content');
         var panelBtnText = document.getElementById('panel-toggle-btn-text');
         if (panelContent) panelContent.classList.remove('collapsed');
         if (panelBtnText) panelBtnText.innerText = "▲ 메뉴 접기";
     }
-    if (localStorage.getItem('user_tab_menu_flat') === 'true') {
+    if (localStorage.getItem('electric_user_tab_menu_flat') === 'true') {
         document.body.classList.add('flat-tab-menu');
         var tabMenuBtn = document.getElementById('tab-menu-style-btn');
         if (tabMenuBtn) tabMenuBtn.innerText = "☰ 탭 메뉴: 일자형";
     }
-    var savedExamDate = localStorage.getItem('user_exam_date');
+    var savedExamDate = localStorage.getItem('electric_user_exam_date');
     if (savedExamDate) {
         var dateInput = document.getElementById('exam-date-input');
         if (dateInput) dateInput.value = savedExamDate;
@@ -745,7 +745,7 @@ function loadSavedStates() {
         if (chk) chk.checked = true;
     });
     for (var i = 1; i <= totalSubPages; i++) {
-        var savedMemo = localStorage.getItem("user_memo_page_" + i);
+        var savedMemo = localStorage.getItem("electric_user_memo_page_" + i);
         if (savedMemo) {
             var memoInput = document.getElementById("memo-input-" + i);
             if (memoInput) memoInput.value = savedMemo;
