@@ -1,0 +1,113 @@
+:root {
+    --primary: #2563eb;
+    --primary-light: rgba(37, 99, 235, 0.1);
+    --bg-color: #f8fafc;
+    --card-bg: #ffffff;
+    --text-color: #1e293b;
+    --text-sub: #64748b;
+    --border-color: #e2e8f0;
+    --radius-lg: 20px;
+    --radius-md: 14px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", Roboto, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hub-container {
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 32px 20px 40px 20px;
+    min-height: 100vh;
+}
+
+.hub-header {
+    text-align: center;
+    margin-bottom: 28px;
+}
+
+.hub-title {
+    font-size: 1.6em;
+    font-weight: 900;
+    color: var(--primary);
+}
+
+.hub-subtitle {
+    margin-top: 6px;
+    font-size: 0.95em;
+    color: var(--text-sub);
+}
+
+.hub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+
+.hub-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 26px 12px;
+    border-radius: var(--radius-lg);
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    text-decoration: none;
+    color: var(--text-color);
+    transition: transform 0.12s ease, box-shadow 0.12s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.hub-card.ready:active {
+    transform: scale(0.97);
+}
+
+.hub-card.ready {
+    cursor: pointer;
+}
+
+.hub-card.disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+.hub-card-icon {
+    font-size: 2em;
+}
+
+.hub-card-title {
+    font-weight: 800;
+    font-size: 1.05em;
+}
+
+.hub-card-desc {
+    font-size: 0.8em;
+    color: var(--text-sub);
+}
+
+.hub-footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 0.78em;
+    color: var(--text-sub);
+    line-height: 1.6;
+    padding: 0 10px;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-color: #0f172a;
+        --card-bg: #1e293b;
+        --text-color: #e2e8f0;
+        --text-sub: #94a3b8;
+        --border-color: #334155;
+    }
+}

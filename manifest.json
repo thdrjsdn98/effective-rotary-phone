@@ -1,0 +1,16 @@
+{
+  "name": "전기기사 필기 - 과목 선택 허브",
+  "short_name": "전기기사 필기",
+  "description": "전기기사 필기 5과목(회로이론/제어공학/전기자기학/전력공학/전기기기/전기설비기준) 학습 허브",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
