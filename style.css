@@ -36,6 +36,10 @@ body {
     font-size: 1.6em;
     font-weight: 900;
     color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
 }
 
 .hub-subtitle {
