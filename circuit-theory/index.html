@@ -628,6 +628,10 @@
                     <div style="margin:0; line-height:1.7;">에너지를 소비하거나 저장만 하고 스스로 발생시키지 않는 소자 — 저항 R(소비), 인덕터 L(자기에너지 저장), 커패시터 C(전기에너지 저장)</div>
                 </div>
                 <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">소자의 저장에너지 공식</p>
+                    <div style="margin:0; line-height:1.7;">각 소자가 에너지를 저장하는 공식은 다음과 같다: <span class='red'>인덕터 W = (1/2)LI²[J]</span>(전류가 만드는 자기장에 에너지 저장), <span class='red'>커패시터 W = (1/2)CV²[J]</span>(전압이 만드는 전기장에 에너지 저장). 저항은 에너지를 저장하지 않고 <span class='blue'>소비전력 P=I²Rt[J]</span>로 전부 열로 소모한다는 것이 세 소자의 근본적인 차이다.</div>
+                </div>
+                <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">2. 수동소자의 응답</p>
                     <div style="margin:0; line-height:1.7;">저항 R: 전압·전류 <span class='red'>동상</span>, Z=R / 인덕터 L: 전류가 전압보다 <span class='blue'>90° 뒤짐(지상)</span>, Z=jωL, 유도리액턴스 XL=ωL / 커패시터 C: 전류가 전압보다 <span class='mint'>90° 앞섬(진상)</span>, Z=1/jωC=-j/(ωC), 용량리액턴스 XC=1/(ωC)</div>
                 </div>
@@ -648,12 +652,20 @@
                     <div style="margin:0; line-height:1.7;">어드미턴스 <span class='red'>Y = 1/R + j(1/XC − 1/XL) = G + j(BC−BL)</span> [℧,S] — G: 컨덕턴스(1/R), BC/BL: 서셉턴스. 전압이 공통이고 각 소자에 흐르는 전류가 위상차를 가진다.</div>
                 </div>
                 <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">📊 R-L-C 직렬·병렬 회로 종합비교표</p>
+                    <div style="margin:0; line-height:1.7;"><div class="table-wrapper"><table class="table"><tr><th colspan='5'>직렬회로 비교</th></tr><tr><th>구분</th><th>임피던스 크기</th><th>위상각</th><th>실효전류</th><th>위상</th></tr><tr><td>R-L</td><td>√(R²+(ωL)²)</td><td>tan⁻¹(ωL/R)</td><td>V/√(R²+(ωL)²)</td><td>전류가 뒤짐(지상)</td></tr><tr><td>R-C</td><td>√(R²+(1/ωC)²)</td><td>tan⁻¹(1/ωCR)</td><td>V/√(R²+(1/ωC)²)</td><td>전류가 앞섬(진상)</td></tr><tr><td>R-L-C</td><td>√(R²+(ωL-1/ωC)²)</td><td>tan⁻¹[(ωL-1/ωC)/R]</td><td>V/√(R²+(ωL-1/ωC)²)</td><td>XL&gt;XC면 지상, XC&gt;XL면 진상</td></tr></table></div><div class="table-wrapper"><table class="table"><tr><th colspan='5'>병렬회로 비교</th></tr><tr><th>구분</th><th>어드미턴스 크기</th><th>위상각</th><th>실효전류</th><th>위상</th></tr><tr><td>R-L</td><td>√((1/R)²+(1/ωL)²)</td><td>tan⁻¹(R/ωL)</td><td>V×√((1/R)²+(1/ωL)²)</td><td>전류가 뒤짐(지상)</td></tr><tr><td>R-C</td><td>√((1/R)²+(ωC)²)</td><td>tan⁻¹(ωCR)</td><td>V×√((1/R)²+(ωC)²)</td><td>전류가 앞섬(진상)</td></tr><tr><td>R-L-C</td><td>√((1/R)²+(ωC-1/ωL)²)</td><td>tan⁻¹[R(ωC-1/ωL)]</td><td>V×√((1/R)²+(ωC-1/ωL)²)</td><td>XC&gt;XL면 진상, XL&gt;XC면 지상</td></tr></table></div><span class='orange'>직렬은 임피던스(Z), 병렬은 어드미턴스(Y)를 기준으로 계산한다는 것</span>과, <span class='orange'>직렬에서 지상이던 관계(R-L)가 병렬에서도 그대로 지상 유지</span>된다는 대응 관계를 함께 기억하면 두 표를 따로 외우지 않아도 된다.</div>
+                </div>
+                <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">5. 공진회로</p>
                     <div style="margin:0; line-height:1.7;">직렬공진(XL=XC): 리액턴스가 상쇄되어 임피던스 <span class='blue'>최소(=R)</span>, 전류 최대, 역률=1 / 병렬공진: 반대로 임피던스 <span class='blue'>최대</span>, 전류 최소 / 공진주파수 <span class='blue'>f0=1/(2π√LC)</span> — L, C 값으로 결정되며 R과는 무관</div>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">선택도(첨예도) Q</p>
                     <div style="margin:0; line-height:1.7;">직렬공진회로의 선택도 <span class='mint'>Q = (1/R)√(L/C) = ω0L/R</span>. Q가 클수록 공진곡선이 뾰족해져 대역폭이 좁아지고, 특정 주파수 선택 성능(라디오 동조회로 등)이 좋아진다.</div>
+                </div>
+                <div class="highlight-box">
+                    <p style="font-weight:700; margin:0 0 6px 0;">병렬공진의 선택도 Q</p>
+                    <div style="margin:0; line-height:1.7;">병렬공진회로의 선택도는 직렬공진과 <span class='red'>역수 관계의 형태</span>로 유도된다: <span class='mint'>Q = R/ω0L = ω0CR = R√(C/L)</span>. 직렬공진의 Q=ω0L/R=(1/R)√(L/C)와 비교하면, <span class='orange'>R의 위치가 분자·분모로 뒤바뀐 대칭적인 형태</span>라는 점이 눈에 띈다 — 직렬에서는 R이 작을수록, 병렬에서는 R이 클수록 선택도(Q)가 좋아진다는 정반대의 경향을 보인다.</div>
                 </div>
                 <div class="highlight-box">
                     <p style="font-weight:700; margin:0 0 6px 0;">공식 유도 - 공진주파수</p>
