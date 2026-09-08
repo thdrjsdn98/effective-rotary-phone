@@ -1,0 +1,16 @@
+{
+  "name": "전기기사 전력공학 - 핵심 요약집",
+  "short_name": "전기 전력공학",
+  "description": "전기기사 필기 전력공학 시험 대비 개념·유도과정 중심 요약집",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f8fafc",
+  "theme_color": "#2563eb",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
