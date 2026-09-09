@@ -831,10 +831,70 @@
         }
 
         .box { background-color: var(--box-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: var(--radius-md); margin: 16px 0; font-size: 0.96em; }
-        .table-wrapper { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 14px 0; border-radius: var(--radius-sm); border: 1px solid var(--border-color); }
-        .table { width: 100%; min-width: 480px; border-collapse: collapse; background: var(--card-bg); }
-        .table th, .table td { border: 1px solid var(--border-color); padding: 11px; text-align: left; font-size: 0.9em; }
-        .table th { background-color: var(--box-bg); color: var(--text-color); font-weight: 700; }
+        .table-wrapper {
+            width: 100% !important;
+            overflow-x: visible !important;
+            -webkit-overflow-scrolling: auto !important;
+            margin: 14px 0;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--border-color);
+            touch-action: pan-y !important;
+            background: var(--card-bg);
+        }
+
+        .table {
+            width: 100% !important;
+            min-width: unset !important;
+            border-collapse: collapse;
+            background: transparent;
+        }
+
+        .table th, .table td {
+            border: 1px solid var(--border-color);
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.9em;
+            word-break: keep-all;
+        }
+        .table th {
+            background-color: var(--box-bg);
+            color: var(--text-color);
+            font-weight: 700;
+        }
+
+        @media (max-width: 650px) {
+            .table, .table tbody, .table tr, .table td, .table th {
+                display: block !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .table thead {
+                display: none !important;
+            }
+            .table tr {
+                margin-bottom: 12px;
+                border: 1px solid var(--border-color);
+                border-radius: var(--radius-sm);
+                background: var(--card-bg);
+                overflow: hidden;
+            }
+            .table tr:last-child {
+                margin-bottom: 0;
+            }
+            .table td, .table th {
+                border: none !important;
+                border-bottom: 1px solid var(--border-color) !important;
+                padding: 10px 12px !important;
+            }
+            .table td:last-child {
+                border-bottom: none !important;
+            }
+            .table th {
+                background-color: var(--primary-light) !important;
+                color: var(--primary) !important;
+                font-weight: 800;
+            }
+        }
         .note { background-color: #fef2f2; border-left: 4px solid #ef4444; padding: 12px; color: #991b1b; margin: 14px 0; border-radius: 6px; font-size: 0.9em; }
         body.dark-mode .note { background-color: #7f1d1d !important; color: #fee2e2 !important; border-left-color: #f87171; }
 
@@ -1011,3 +1071,53 @@ body.dark-mode .font-btn { background-color: #1e293b; border-color: #334155; col
             z-index: 5;
             mix-blend-mode: multiply;
         }
+
+/* 🔢 단원 목록 카드 - 번호 뱃지 + 아이콘 */
+.sub-nav-card > span:first-child {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+    min-width: 0;
+}
+.sub-nav-num-badge {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #ffffff;
+    font-size: 0.75em;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sub-nav-icon {
+    flex-shrink: 0;
+    font-size: 1.1em;
+    line-height: 1;
+}
+.sub-nav-title-text {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* 🎨 표 스타일 다듬기: 대비 강화 + 여백 개선 + 줄무늬 */
+.table th {
+    padding: 12px 14px !important;
+    letter-spacing: 0.01em;
+}
+.table td {
+    padding: 11px 14px !important;
+}
+.table tbody tr:nth-child(even) td,
+.table tr:nth-child(even) td {
+    background-color: var(--box-bg);
+}
+@media (max-width: 650px) {
+    .table tr:nth-child(even) {
+        background: var(--box-bg) !important;
+    }
+}
