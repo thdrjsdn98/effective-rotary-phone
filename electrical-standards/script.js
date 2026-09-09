@@ -41,6 +41,7 @@ var studyQuotes = [
 
 document.addEventListener("DOMContentLoaded", function () {
     loadSavedStates();
+    setupPenDebugPanel();
     setupMemorizeClickEvents();
     updateProgress();
     calculateDDay();
@@ -1143,4 +1144,138 @@ function setupPenAnnotationOverlays() {
         page.setAttribute('data-pen-ready', '1');
         createPenCanvasForPage(page);
     });
+}
+/* ============================================================
+   🐛 필기 디버그 패널 (펜/터치 입력 로그, 좌측 하단)
+   ============================================================ */
+function setupPenDebugPanel() {
+    if (setupPenDebugPanel._bound) return;
+    setupPenDebugPanel._bound = true;
+
+    var LOG_KEY = PK('pen_debug_log');
+    var MAX_LINES = 300;
+
+    var toggleBtn = document.createElement('button');
+    toggleBtn.innerText = '🐛';
+    toggleBtn.style.cssText =
+        'position:fixed;left:20px;bottom:74px;z-index:100000;width:36px;height:36px;' +
+        'border-radius:50%;border:1px solid #999;background:#fff;opacity:0.55;font-size:16px;';
+    document.body.appendChild(toggleBtn);
+
+    var panel = document.createElement('div');
+    panel.style.cssText =
+        'position:fixed;left:8px;right:8px;bottom:118px;z-index:100000;max-height:45vh;' +
+        'background:rgba(0,0,0,0.9);border-radius:8px;display:none;';
+    document.body.appendChild(panel);
+
+    var toolbar = document.createElement('div');
+    toolbar.style.cssText = 'display:flex;gap:6px;padding:6px 8px;border-bottom:1px solid #333;';
+    var copyBtn = document.createElement('button');
+    copyBtn.innerText = '📋 복사';
+    copyBtn.style.cssText = 'font-size:11px;padding:4px 10px;border-radius:10px;border:1px solid #666;background:#222;color:#fff;';
+    var clearBtn = document.createElement('button');
+    clearBtn.innerText = '🗑️ 로그 지우기';
+    clearBtn.style.cssText = copyBtn.style.cssText;
+    var downloadBtn = document.createElement('button');
+    downloadBtn.innerText = '⬇️ 다운로드';
+    downloadBtn.style.cssText = copyBtn.style.cssText;
+    toolbar.appendChild(copyBtn);
+    toolbar.appendChild(clearBtn);
+    toolbar.appendChild(downloadBtn);
+    panel.appendChild(toolbar);
+
+    var logBox = document.createElement('div');
+    logBox.style.cssText =
+        'max-height:calc(45vh - 40px);overflow-y:auto;color:#0f0;font-size:11px;' +
+        'font-family:monospace;padding:8px;white-space:pre-wrap;';
+    panel.appendChild(logBox);
+
+    var visible = false;
+    toggleBtn.addEventListener('click', function() {
+        visible = !visible;
+        panel.style.display = visible ? 'block' : 'none';
+    });
+
+    var lines = [];
+    try {
+        var savedLog = JSON.parse(localStorage.getItem(LOG_KEY) || '[]');
+        if (Array.isArray(savedLog)) lines = savedLog;
+    } catch (err) { lines = []; }
+
+    function render() {
+        logBox.innerText = lines.join('\n');
+        logBox.scrollTop = logBox.scrollHeight;
+    }
+    function persistLog() {
+        try { localStorage.setItem(LOG_KEY, JSON.stringify(lines)); } catch (err) {}
+    }
+    function log(msg) {
+        var t = new Date().toISOString().substr(11, 12);
+        lines.push(t + '  ' + msg);
+        if (lines.length > MAX_LINES) lines.shift();
+        render();
+        persistLog();
+    }
+    render();
+
+    copyBtn.addEventListener('click', function() {
+        var text = lines.join('\n');
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(function() {
+                showAppToast ? showAppToast('📋 로그를 복사했어요. 붙여넣기 해서 보내주세요.') : alert('로그를 복사했어요.');
+            }).catch(function() {
+                showAppToast ? showAppToast('⚠️ 복사에 실패했어요. 로그를 길게 눌러 직접 선택해주세요.') : alert('복사에 실패했어요.');
+            });
+        } else {
+            alert('이 브라우저는 자동 복사를 지원하지 않아요. 로그를 길게 눌러 직접 선택해주세요.');
+        }
+    });
+
+    clearBtn.addEventListener('click', function() {
+        lines = [];
+        render();
+        persistLog();
+    });
+
+    downloadBtn.addEventListener('click', function() {
+        try {
+            var text = lines.join('\n');
+            var blob = new Blob([text], { type: 'text/plain' });
+            var url = URL.createObjectURL(blob);
+            var a = document.createElement('a');
+            var ts = new Date().toISOString().replace(/[:.]/g, '-');
+            a.href = url;
+            a.download = 'pen-debug-log-' + ts + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function() { URL.revokeObjectURL(url); }, 2000);
+        } catch (err) {
+            alert('다운로드에 실패했어요. 복사 버튼을 이용해주세요.');
+        }
+    });
+
+    ['pointerover', 'pointerenter', 'pointerdown', 'pointermove', 'pointerup', 'pointercancel', 'pointerleave', 'pointerout']
+        .forEach(function(evt) {
+            document.addEventListener(evt, function(e) {
+                if (evt === 'pointermove') {
+                    var now = Date.now();
+                    if (log._lastMove && now - log._lastMove < 100) return;
+                    log._lastMove = now;
+                }
+                log(evt + '  type=' + e.pointerType + ' buttons=' + e.buttons +
+                    ' x=' + Math.round(e.clientX) + ',' + Math.round(e.clientY));
+            }, true);
+        });
+
+    log('--- 디버그 패널 시작됨 (앱 재실행) ---');
+}
+
+function toggleChangelog() {
+    var panel = document.getElementById('changelog-panel');
+    var btn = document.getElementById('changelog-toggle-btn');
+    if (!panel) return;
+    var isHidden = (panel.style.display === 'none' || panel.style.display === '');
+    panel.style.display = isHidden ? 'block' : 'none';
+    if (btn) btn.innerText = isHidden ? '📋 업데이트 내역 닫기' : '📋 업데이트 내역 보기';
 }
