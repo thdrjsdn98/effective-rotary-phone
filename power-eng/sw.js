@@ -1,4 +1,4 @@
-const CACHE_NAME = 'electric-power-cache-v2';
+const CACHE_NAME = 'electric-power-cache-v3';
 const FILES_TO_CACHE = [
   './', './index.html', './style.css', './script.js', './questions.js',
   './manifest.json', './icon-192.png', './icon-512.png'
