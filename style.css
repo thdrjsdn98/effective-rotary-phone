@@ -1026,3 +1026,109 @@ body.dark-mode .pen-tool-btn { background-color: #1e293b; border-color: #334155;
     font-family: monospace;
     line-height: 1.5;
 }
+/* ============================================================
+   ⚡ 메인 허브 표지 (과목 선택) 스타일
+   ============================================================ */
+.hub-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 24px 16px 40px;
+    min-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.hub-header {
+    text-align: center;
+    margin-bottom: 28px;
+    padding-top: 12px;
+}
+
+.hub-title {
+    font-size: 1.65em;
+    font-weight: 800;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    letter-spacing: -0.5px;
+}
+
+.hub-subtitle {
+    font-size: 0.95em;
+    color: var(--text-sub);
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+.hub-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 28px;
+}
+
+@media (max-width: 360px) {
+    .hub-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.hub-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: var(--text-color);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.hub-card:hover {
+    border-color: var(--primary);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+.hub-card:active {
+    transform: scale(0.98);
+}
+
+.hub-card-icon {
+    font-size: 2.2em;
+    margin-bottom: 10px;
+    line-height: 1;
+}
+
+.hub-card-title {
+    font-size: 1.05em;
+    font-weight: 800;
+    color: var(--text-color);
+    margin-bottom: 4px;
+    letter-spacing: -0.3px;
+}
+
+.hub-card-desc {
+    font-size: 0.78em;
+    color: var(--text-sub);
+    font-weight: 600;
+}
+
+.hub-footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 0.8em;
+    color: var(--text-sub);
+    line-height: 1.6;
+    padding-top: 20px;
+    border-top: 1px solid var(--border-color);
+}
