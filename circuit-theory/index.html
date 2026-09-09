@@ -141,7 +141,35 @@
                 <div class="cover-info">
                     <p>범위: 13단원 (전기이론 ~ 전달함수)</p>
                     <p>확인문제: 단원별 4~6문제 · 총 26문제</p>
-                    <p>버전: V1.0.2 (필기 툴바 스타일 누락 수정)</p>
+                    <p>버전: V1.0.3 (업데이트 내역 패널 + 필기 디버그 버튼 추가)</p>
+                </div>
+                <div style="margin-top: 14px;">
+                    <button class="font-btn" id="changelog-toggle-btn" onclick="toggleChangelog()" style="font-size: 0.85em; padding: 8px 16px;">📋 업데이트 내역 보기</button>
+                </div>
+                <div id="changelog-panel" class="box" style="display: none; margin-top: 14px; text-align: left; max-width: 480px; margin-left: auto; margin-right: auto;">
+                    <div style="font-weight: 700; margin-bottom: 10px; color: var(--primary);">📋 업데이트 내역</div>
+
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 700; font-size: 0.95em;">V1.0.3 <span style="font-weight:400; color:var(--text-sub); font-size:0.85em;">- 업데이트 내역 패널 및 디버그 버튼 추가</span></div>
+                        <ul style="margin: 4px 0 0 0; padding-left: 18px; font-size: 0.88em; color: var(--text-sub);">
+                            <li>표지에 업데이트 내역(변경 이력) 패널 신설</li>
+                            <li>좌측 하단 🐛 필기 디버그 버튼 추가 (펜/터치 입력 로그 확인용)</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 700; font-size: 0.95em;">V1.0.2 <span style="font-weight:400; color:var(--text-sub); font-size:0.85em;">- 필기 툴바 스타일 누락 수정</span></div>
+                        <ul style="margin: 4px 0 0 0; padding-left: 18px; font-size: 0.88em; color: var(--text-sub);">
+                            <li>필기 펜/형광펜/지우개 툴바 스타일(CSS)이 누락되어 버튼이 줄바꿈되고 색상 점이 안 보이던 문제 수정</li>
+                        </ul>
+                    </div>
+
+                    <div style="margin-bottom: 12px;">
+                        <div style="font-weight: 700; font-size: 0.95em;">V1.0.1</div>
+                        <ul style="margin: 4px 0 0 0; padding-left: 18px; font-size: 0.88em; color: var(--text-sub);">
+                            <li>최초 배포 (그 이전 세부 변경 내역은 별도로 기록되지 않았습니다)</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
             <div class="box">
