@@ -414,29 +414,40 @@ function filterBookmarks() {
 }
 
 /* ===================== 탭 전환 ===================== */
-function openTab(evt, tabId) {
-    var contents = document.getElementsByClassName("tab-content");
-    for (var i = 0; i < contents.length; i++) contents[i].classList.remove("active");
-    var btns = document.getElementsByClassName("tab-btn");
-    for (var j = 0; j < btns.length; j++) btns[j].classList.remove("active");
+var tabDropdownLabels = {
+    'tab-cover': '표지',
+    'tab-study': '📘 단원학습',
+    'tab-numbers': '📐 핵심 수치 치트시트',
+    'tab-exam': '🎲 모의고사',
+    'tab-wrong': '📕 오답노트'
+};
 
-    document.getElementById(tabId).classList.add("active");
+function openTab(evt, tabName) {
+    var tabcontent = document.getElementsByClassName("tab-content");
+    for (var i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+        tabcontent[i].classList.remove("active");
+    }
+    var tablinks = document.getElementsByClassName("tab-btn");
+    for (var j = 0; j < tablinks.length; j++) {
+        tablinks[j].classList.remove("active");
+    }
+    var target = document.getElementById(tabName);
+    if (target) {
+        target.style.display = "block";
+        target.classList.add("active");
+    }
     if (evt && evt.currentTarget) evt.currentTarget.classList.add("active");
 
-    var dropdownLabel = document.getElementById('tab-dropdown-label');
-    if (dropdownLabel) {
-        var labelMap = { 'tab-cover': '표지', 'tab-study': '단원학습', 'tab-exam': '랜덤모의고사', 'tab-wrong': '오답노트' };
-        dropdownLabel.innerText = labelMap[tabId] || '메뉴';
+    var labelEl = document.getElementById('tab-dropdown-label');
+    if (labelEl && tabDropdownLabels[tabName]) {
+        labelEl.innerText = tabDropdownLabels[tabName];
     }
-    var dropdownList = document.getElementById('tab-dropdown-list');
-    if (dropdownList) dropdownList.classList.remove('open');
+    var list = document.getElementById('tab-dropdown-list');
+    if (list) list.classList.remove('open');
 
-    // 단원학습 탭으로 돌아올 때는 항상 단원 목록부터 보여준다
-    // (마지막에 보던 챕터가 아니라 목록이 먼저 뜨도록)
-    if (tabId === 'tab-study') {
-        showSubMenu();
-    }
-
+    if (tabName === 'tab-study') showSubMenu();
+    if (tabName === 'tab-wrong') renderWrongNotes();
     window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -464,6 +475,9 @@ function showSubPage(pageNum) {
     if (targetPage) targetPage.style.display = "block";
     document.getElementById("page-nav-bar").style.display = "flex";
     updateNavButtons();
+	
+	setupPenAnnotationOverlays();
+	
     window.scrollTo({ top: 0, behavior: 'instant' });
 }
 
@@ -874,5 +888,259 @@ if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('./sw.js').catch(function (err) {
             console.log('SW 등록 실패:', err);
         });
+    });
+}
+
+/* ============================================================
+   🖊️ 소방 폼 이식: S펜 멀티 툴바 (3색 펜 + 3색 형광펜 + 지우개)
+   ============================================================ */
+function createPenCanvasForPage(page) {
+    var header = page.querySelector('.sub-page-header');
+    var quizSection = page.querySelector('.quiz-section') || page.querySelector('.page-memo-section');
+    if (!header || !quizSection) return;
+
+    var toolbarRow = document.createElement('div');
+    toolbarRow.className = 'unit-pen-toolbar-row';
+
+    var toolbar = document.createElement('div');
+    toolbar.className = 'unit-pen-toolbar';
+
+    var currentTool = 'pen';
+    var penColor = '#2563eb';
+    var highlighterColor = 'rgba(250, 204, 21, 0.78)';
+
+    var btnPen = document.createElement('button');
+    btnPen.type = 'button';
+    btnPen.className = 'unit-pen-btn active';
+    btnPen.innerText = '✏️ 펜';
+
+    var btnHighlighter = document.createElement('button');
+    btnHighlighter.type = 'button';
+    btnHighlighter.className = 'unit-pen-btn';
+    btnHighlighter.innerText = '🖍️ 형광펜';
+
+    var btnEraser = document.createElement('button');
+    btnEraser.type = 'button';
+    btnEraser.className = 'unit-pen-btn';
+    btnEraser.innerText = '🧹 지우개';
+
+    var btnClear = document.createElement('button');
+    btnClear.type = 'button';
+    btnClear.className = 'unit-pen-btn';
+    btnClear.innerText = '🗑️ 비우기';
+
+    var divider1 = document.createElement('div');
+    divider1.className = 'unit-pen-divider';
+    var divider2 = document.createElement('div');
+    divider2.className = 'unit-pen-divider';
+
+    var palette = document.createElement('div');
+    palette.style.cssText = 'display:inline-flex;align-items:center;gap:4px;';
+
+    var penColors = [
+        { color: '#2563eb', bg: '#2563eb' },
+        { color: '#dc2626', bg: '#dc2626' },
+        { color: '#0f172a', bg: '#0f172a' }
+    ];
+    var highColors = [
+        { color: 'rgba(250, 204, 21, 0.78)', bg: '#facc15' },
+        { color: 'rgba(74, 222, 128, 0.75)', bg: '#4ade80' },
+        { color: 'rgba(244, 114, 182, 0.75)', bg: '#f472b6' }
+    ];
+
+    function updatePaletteUI() {
+        palette.innerHTML = '';
+        if (currentTool === 'eraser') {
+            palette.style.display = 'none';
+            return;
+        }
+        palette.style.display = 'inline-flex';
+        var list = (currentTool === 'highlighter') ? highColors : penColors;
+        var currentSelected = (currentTool === 'highlighter') ? highlighterColor : penColor;
+
+        list.forEach(function(item) {
+            var dot = document.createElement('span');
+            dot.className = 'unit-pen-color-dot' + (item.color === currentSelected ? ' active' : '');
+            dot.style.backgroundColor = item.bg;
+            dot.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (currentTool === 'highlighter') highlighterColor = item.color;
+                else penColor = item.color;
+                updatePaletteUI();
+            });
+            palette.appendChild(dot);
+        });
+    }
+
+    function setTool(tool) {
+        currentTool = tool;
+        btnPen.classList.toggle('active', tool === 'pen');
+        btnHighlighter.classList.toggle('active', tool === 'highlighter');
+        btnEraser.classList.toggle('active', tool === 'eraser');
+        updatePaletteUI();
+    }
+
+    btnPen.addEventListener('click', function() { setTool('pen'); });
+    btnHighlighter.addEventListener('click', function() { setTool('highlighter'); });
+    btnEraser.addEventListener('click', function() { setTool('eraser'); });
+    btnClear.addEventListener('click', function() {
+        if (!confirm('이 페이지의 필기를 모두 지울까요?')) return;
+        strokes = [];
+        redrawAll();
+        var storageKey = (typeof PK === 'function') ? PK('pen_body_' + page.id) : ('pen_body_' + page.id);
+        localStorage.removeItem(storageKey);
+    });
+
+    toolbar.appendChild(btnPen);
+    toolbar.appendChild(btnHighlighter);
+    toolbar.appendChild(btnEraser);
+    toolbar.appendChild(divider1);
+    toolbar.appendChild(palette);
+    toolbar.appendChild(divider2);
+    toolbar.appendChild(btnClear);
+    toolbarRow.appendChild(toolbar);
+    updatePaletteUI();
+
+    header.parentNode.insertBefore(toolbarRow, header.nextSibling);
+
+    var wrap = document.createElement('div');
+    wrap.className = 'unit-body-wrap';
+
+    var node = toolbarRow.nextSibling;
+    var toMove = [];
+    while (node && node !== quizSection) {
+        toMove.push(node);
+        node = node.nextSibling;
+    }
+    toMove.forEach(function(n) { wrap.appendChild(n); });
+    page.insertBefore(wrap, quizSection);
+
+    var canvas = document.createElement('canvas');
+    canvas.className = 'unit-pen-canvas';
+    wrap.appendChild(canvas);
+    var ctx = canvas.getContext('2d');
+
+    var strokes = loadStrokes();
+
+    function loadStrokes() {
+        try {
+            var storageKey = (typeof PK === 'function') ? PK('pen_body_' + page.id) : ('pen_body_' + page.id);
+            var raw = localStorage.getItem(storageKey);
+            return raw ? JSON.parse(raw) : [];
+        } catch (err) { return []; }
+    }
+
+    function persistStrokes() {
+        try {
+            var storageKey = (typeof PK === 'function') ? PK('pen_body_' + page.id) : ('pen_body_' + page.id);
+            if (strokes.length === 0) localStorage.removeItem(storageKey);
+            else localStorage.setItem(storageKey, JSON.stringify(strokes));
+        } catch (err) {}
+    }
+
+    function redrawAll() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        strokes.forEach(function(s) {
+            if (!s.pts || s.pts.length < 2) return;
+            if (s.erase) {
+                ctx.globalCompositeOperation = 'destination-out';
+                ctx.lineWidth = s.w || 24;
+            } else if (s.isHighlighter) {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = s.color || 'rgba(250, 204, 21, 0.78)';
+                ctx.lineWidth = s.w || 18;
+            } else {
+                ctx.globalCompositeOperation = 'source-over';
+                ctx.strokeStyle = s.color || '#2563eb';
+                ctx.lineWidth = s.w || 2;
+            }
+            ctx.beginPath();
+            ctx.moveTo(s.pts[0][0], s.pts[0][1]);
+            for (var i = 1; i < s.pts.length; i++) ctx.lineTo(s.pts[i][0], s.pts[i][1]);
+            ctx.stroke();
+        });
+        ctx.globalCompositeOperation = 'source-over';
+    }
+
+    function resizeCanvas() {
+        var dpr = Math.min(window.devicePixelRatio || 1, 2);
+        var w = wrap.clientWidth;
+        var h = wrap.scrollHeight;
+        if (!w || !h) return;
+        canvas.width = Math.round(w * dpr);
+        canvas.height = Math.round(h * dpr);
+        canvas.style.width = w + 'px';
+        canvas.style.height = h + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        redrawAll();
+    }
+
+    if (window.ResizeObserver) new ResizeObserver(resizeCanvas).observe(wrap);
+    else window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    var currentStroke = null;
+    function getPos(e) {
+        var rect = canvas.getBoundingClientRect();
+        return [e.clientX - rect.left, e.clientY - rect.top];
+    }
+
+    wrap.addEventListener('pointerdown', function(e) {
+        if (e.pointerType !== 'pen') return;
+        e.preventDefault();
+        e.stopPropagation();
+
+        var isEraser = (currentTool === 'eraser') || ((e.buttons & 32) === 32) || e.button === 5;
+        var isHigh = (currentTool === 'highlighter') && !isEraser;
+        var widthVal = isEraser ? 24 : (isHigh ? 18 : (1.2 + (e.pressure || 0.5) * 2.5));
+        var strokeColor = isEraser ? '#000000' : (isHigh ? highlighterColor : penColor);
+
+        currentStroke = {
+            pts: [getPos(e)],
+            erase: isEraser,
+            isHighlighter: isHigh,
+            color: strokeColor,
+            w: widthVal
+        };
+
+        try { wrap.setPointerCapture(e.pointerId); } catch (err) {}
+        ctx.globalCompositeOperation = isEraser ? 'destination-out' : 'source-over';
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = widthVal;
+        ctx.beginPath();
+        ctx.moveTo(currentStroke.pts[0][0], currentStroke.pts[0][1]);
+    }, true);
+
+    wrap.addEventListener('pointermove', function(e) {
+        if (!currentStroke || e.pointerType !== 'pen') return;
+        e.preventDefault();
+        e.stopPropagation();
+        var pos = getPos(e);
+        currentStroke.pts.push(pos);
+        ctx.lineTo(pos[0], pos[1]);
+        ctx.stroke();
+    }, { capture: true, passive: false });
+
+    function endStroke(e) {
+        if (!currentStroke || e.pointerType !== 'pen') return;
+        ctx.globalCompositeOperation = 'source-over';
+        try { wrap.releasePointerCapture(e.pointerId); } catch (err) {}
+        if (currentStroke.pts.length >= 2) {
+            strokes.push(currentStroke);
+            persistStrokes();
+        }
+        currentStroke = null;
+    }
+    wrap.addEventListener('pointerup', endStroke, true);
+    wrap.addEventListener('pointercancel', endStroke, true);
+}
+
+function setupPenAnnotationOverlays() {
+    var pages = document.querySelectorAll('.sub-page:not([data-pen-ready])');
+    pages.forEach(function(page) {
+        page.setAttribute('data-pen-ready', '1');
+        createPenCanvasForPage(page);
     });
 }
