@@ -14,7 +14,7 @@ var STORAGE_PREFIX = 'electric_circuit_';
 function PK(key) { return STORAGE_PREFIX + key; }
 
 var currentSubPage = 0;
-var totalSubPages = 13;
+var totalSubPages = 17;
 var bookmarks = JSON.parse(localStorage.getItem(PK('user_bookmarks')) || '[]');
 var completes = JSON.parse(localStorage.getItem(PK('user_completes')) || '[]');
 var currentFontSize = parseInt(localStorage.getItem(PK('user_font_size')) || '14', 10);
@@ -510,10 +510,11 @@ function updateNavButtons() {
 
 /* ===================== 퀴즈 채점 ===================== */
 var unitTitles = {
-    1: "01. 전기이론", 2: "02. 정현파 교류", 3: "03. R-L-C 교류회로",
-    4: "04. 교류전력", 5: "05. 인덕턴스 및 벡터궤적", 6: "06. 회로망",
-    7: "07. 대칭 n상 교류", 8: "08. 대칭좌표법", 9: "09. 비정현파 교류",
-    10: "10. 단자망", 11: "11. 라플라스 변환", 12: "12. 과도현상", 13: "13. 전달함수"
+    1: "01. 전기회로 기초·옴의 법칙", 2: "02. 키르히호프의 법칙 (KCL·KVL)", 3: "03. 저항의 직렬·병렬 접속과 분배법칙",
+    4: "04. 전지의 접속과 전력", 5: "05. 휘스톤 브리지·배율기/분류기·심화", 6: "06. 정현파 교류",
+    7: "07. R-L-C 교류회로", 8: "08. 교류전력", 9: "09. 인덕턴스 및 벡터궤적", 10: "10. 회로망",
+    11: "11. 대칭 n상 교류", 12: "12. 대칭좌표법", 13: "13. 비정현파 교류", 14: "14. 단자망",
+    15: "15. 라플라스 변환", 16: "16. 과도현상", 17: "17. 전달함수"
 };
 
 function unitOfQid(qId) {
