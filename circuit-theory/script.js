@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
     loadSavedStates();
     setupPenDebugPanel();
     enhanceSubNavCards();
+    enhanceContentHeadings();
     setupMemorizeClickEvents();
     updateProgress();
     calculateDDay();
@@ -1297,11 +1298,38 @@ function enhanceSubNavCards() {
         var m = text.match(/^\s*(\d+)\.\s*(.*)$/);
         if (!m) return;
         card.setAttribute('data-enhanced', '1');
-        var num = m[1];
+        var num = m[1].length < 2 ? ('0' + m[1]) : m[1];
         var title = m[2];
         span.innerHTML =
             '<span class="sub-nav-num-badge">' + num + '</span>' +
             '<span class="sub-nav-icon">📘</span>' +
             '<span class="sub-nav-title-text">' + title + '</span>';
+    });
+}
+
+/* ============================================================
+   📖 본문 제목(h2) - 번호/제목/부제 구조화
+   ============================================================ */
+function enhanceContentHeadings() {
+    document.querySelectorAll('.sub-page h2').forEach(function(h2) {
+        if (h2.getAttribute('data-enhanced') === '1') return;
+        var text = h2.textContent || '';
+        var m = text.match(/^\s*(\d+)\.\s*(.+?)\s*(?:[\[\(]([^\]\)]+)[\]\)])?\s*$/);
+        if (!m) return;
+        h2.setAttribute('data-enhanced', '1');
+        var num = m[1].length < 2 ? ('0' + m[1]) : m[1];
+        var title = m[2].trim();
+        var suffix = m[3] ? m[3].trim() : '';
+        if (suffix.indexOf('/') !== -1) {
+            suffix = suffix.split('/').join(' · ');
+        }
+        var html =
+            '<span class="content-h2-num">' + num + '</span>' +
+            '<span class="content-h2-title">' + title + '</span>';
+        if (suffix) {
+            html += '<span class="content-h2-sub">' + suffix + '</span>';
+        }
+        h2.innerHTML = html;
+        h2.classList.add('content-h2-structured');
     });
 }
